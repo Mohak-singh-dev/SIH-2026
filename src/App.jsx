@@ -3,7 +3,8 @@ import {
   Brain, HeartHandshake, Menu, X, ArrowRight, Sparkles, Gamepad2, Mic,
   BellRing, MapPin, WifiOff, Languages, ShieldCheck, UsersRound, Activity,
   ChevronRight, Home, Check, Stethoscope, Clock3, Phone, Route, Pill,
-  Heart, Lightbulb, Music
+  Heart, Lightbulb, Music, LogOut, UserRound, CalendarDays, TrendingUp,
+  CircleCheck, AlertCircle, Clock, ChevronDown, Sun, Moon
 } from 'lucide-react'
 import heroImage from './assets/mindcare-hero.png'
 import {
@@ -38,7 +39,6 @@ const future = [
   ['Medicine Reminders', Pill], ['Caregiver Dashboard', UsersRound], ['Offline Safe Navigation', MapPin],
   ['Offline Sync', WifiOff], ['Regional Languages', Languages], ['Emergency Alerts', BellRing],
 ]
-
 /* ─── Shared Primitives ─────────────────────────────────────────── */
 function Button({ children, kind = 'primary', className = '', ...props }) {
   return (
@@ -59,8 +59,23 @@ function Logo({ onClick }) {
   )
 }
 
-/* ─── Landing Page Components (unchanged) ───────────────────────── */
-function Navbar({ openLogin }) {
+function ThemeToggle({ dark, onToggle }) {
+  return (
+    <button
+      className="theme-toggle"
+      type="button"
+      onClick={onToggle}
+      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {dark ? <Sun size={17} /> : <Moon size={17} />}
+      <span>{dark ? 'Light' : 'Dark'}</span>
+    </button>
+  )
+}
+
+/* ─── Landing Page Components ───────────────────────────────────── */
+function Navbar({ openLogin, dark, onToggleTheme }) {
   const [open, setOpen] = useState(false)
   return (
     <header className="navbar">
@@ -77,6 +92,7 @@ function Navbar({ openLogin }) {
           </div>
         </nav>
         <div className="desktop-actions">
+          <ThemeToggle dark={dark} onToggle={onToggleTheme} />
           <button className="text-button" onClick={() => openLogin('Patient')}>Patient Login</button>
           <Button onClick={() => openLogin('Caregiver')}>Caregiver Login</Button>
         </div>
@@ -306,22 +322,60 @@ function Footer() {
     </footer>
   )
 }
-function LoginModal({ type, onClose, onPatientEnter }) {
+function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+
   if (!type) return null
   const isPatient = type === 'Patient'
+
+  const submit = e => {
+    e.preventDefault()
+    if (type === 'Caregiver' && email === 'singhmohak360@gmail.com' && password === 'Hello@123') {
+      onLogin()
+      return
+    }
+    setError(type === 'Caregiver' ? 'Please enter the sample caregiver credentials shown below.' : 'The patient portal is coming soon.')
+  }
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="login-title" onClick={e => e.stopPropagation()}>
+      <div className={`modal ${type === 'Caregiver' ? 'login-modal' : ''}`} role="dialog" aria-modal="true" aria-labelledby="login-title" onClick={e => e.stopPropagation()}>
         <button className="modal-x" aria-label="Close login dialog" onClick={onClose} autoFocus><X /></button>
         <span className="icon-bubble blue"><HeartHandshake /></span>
-        <h2 id="login-title">{isPatient ? 'Patient Login' : `${type} portal`}</h2>
+        <h2 id="login-title">{isPatient ? 'Patient Login' : `${type} login`}</h2>
         <p>{isPatient
           ? 'Enter the patient experience directly. No username, password or OTP is required in this kiosk prototype.'
-          : `The ${type.toLowerCase()} portal is being prepared for the next phase of MindCare NER.`}
+          : (type === 'Caregiver' ? 'Sign in to view your patient’s care overview.' : `The ${type.toLowerCase()} portal is being prepared for the next phase of MindCare NER.`)}
         </p>
-        <Button onClick={isPatient ? onPatientEnter : onClose}>
-          {isPatient ? 'Enter Patient Experience' : 'Continue exploring'}
-        </Button>
+        {type === 'Caregiver' && (
+          <form onSubmit={submit} className="login-form">
+            <label>Email address
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required />
+            </label>
+            <label>Password
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" required />
+            </label>
+            {error && <p className="login-error"><AlertCircle size={15} />{error}</p>}
+            <Button type="submit">Sign in <ArrowRight size={17} /></Button>
+            <div className="demo-credentials">
+              <strong>Sample credentials</strong>
+              <span>Email: singhmohak360@gmail.com</span>
+              <span>Password: Hello@123</span>
+            </div>
+          </form>
+        )}
+        {isPatient && (
+          <Button onClick={onPatientEnter}>
+            Enter Patient Experience
+          </Button>
+        )}
+        {type !== 'Caregiver' && !isPatient && (
+          <Button onClick={onClose}>
+            Continue exploring
+          </Button>
+        )}
       </div>
     </div>
   )
@@ -699,9 +753,144 @@ function ActivityPlaceholder({ activityId, onHome, onDashboard }) {
   )
 }
 
+/* ─── Caregiver Dashboard ────────────────────────────────────────── */
+function CaregiverDashboard({ onLogout, dark, onToggleTheme }) {
+  const stats = [
+    ['Today’s activity', '42 min', Clock3, 'teal'],
+    ['Cognitive score', '72 / 100', TrendingUp, 'violet'],
+    ['Medication', '2 of 3 taken', Pill, 'coral'],
+    ['Next appointment', '12 Sep', CalendarDays, 'blue']
+  ]
+  return (
+    <div className="dashboard">
+      <header className="dash-header">
+        <div className="dash-brand">
+          <Logo />
+          <span>Caregiver portal</span>
+        </div>
+        <div className="dash-actions">
+          <ThemeToggle dark={dark} onToggle={onToggleTheme} />
+          <button className="notification"><BellRing size={19} /><i /></button>
+          <div className="caregiver-name">
+            <span>MS</span>
+            <div><strong>Mohak Singh</strong><small>Caregiver</small></div>
+            <ChevronDown size={15} />
+          </div>
+          <button className="logout" onClick={onLogout}><LogOut size={17} /> <b>Logout</b></button>
+        </div>
+      </header>
+      <main className="dash-main">
+        <section className="dash-welcome">
+          <div>
+            <p className="dash-kicker">CARE OVERVIEW</p>
+            <h1>Good morning, Mohak.</h1>
+            <p>Here’s how Mr. Ramesh Das is doing today.</p>
+          </div>
+          <div className="sync-status"><CircleCheck size={18} /> Last updated today, 9:42 AM</div>
+        </section>
+        <section className="patient-banner">
+          <div className="patient-avatar">RD</div>
+          <div className="patient-summary">
+            <span>YOUR PATIENT</span>
+            <h2>Mr. Ramesh Das <i>•</i> <small>72 years</small></h2>
+            <p><MapPin size={15} /> Guwahati, Assam <b>•</b> Patient ID: MC-2048</p>
+          </div>
+          <div className="risk-chip">
+            <span>DEMENTIA LEVEL</span>
+            <strong>Moderate</strong>
+            <small>Needs regular support</small>
+          </div>
+          <button className="view-profile">View full profile <ArrowRight size={16} /></button>
+        </section>
+        <section className="stat-grid">
+          {stats.map(([name, value, Icon, color]) => (
+            <article className="dash-stat" key={name}>
+              <span className={`icon-bubble ${color}`}><Icon size={20} /></span>
+              <div><p>{name}</p><strong>{value}</strong></div>
+            </article>
+          ))}
+        </section>
+        <section className="dash-grid">
+          <div className="dash-card progress-card">
+            <div className="card-title">
+              <div><p className="dash-kicker">COGNITIVE PROGRESS</p><h2>Weekly engagement</h2></div>
+              <button>This week <ChevronDown size={14} /></button>
+            </div>
+            <div className="chart">
+              <div className="chart-labels"><span>100</span><span>75</span><span>50</span><span>25</span></div>
+              <div className="chart-bars">
+                {[['Mon', 58], ['Tue', 71], ['Wed', 64], ['Thu', 82], ['Fri', 76], ['Sat', 88], ['Sun', 72]].map(([day, height]) => (
+                  <div className="bar-wrap" key={day}>
+                    <div className="bar-value">{height}</div>
+                    <div className="bar" style={{ height: `${height}%` }} />
+                    <span>{day}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="progress-note">
+              <TrendingUp size={18} />
+              <span><b>12% improvement</b> in cognitive engagement compared with last week.</span>
+            </div>
+          </div>
+          <div className="dash-card routine-card">
+            <div className="card-title">
+              <div><p className="dash-kicker">TODAY’S ROUTINE</p><h2>Care tasks</h2></div>
+              <button className="link-btn">View all</button>
+            </div>
+            {[
+              ['Morning medicine', '8:00 AM', 'Completed', true],
+              ['Memory matching activity', '10:30 AM', 'Completed', true],
+              ['Afternoon medicine', '2:00 PM', 'Upcoming', false],
+              ['Evening walk', '5:30 PM', 'Upcoming', false]
+            ].map(([task, time, state, done]) => (
+              <div className="task-row" key={task}>
+                <span className={done ? 'task-check done' : 'task-check'}>
+                  {done ? <Check size={15} /> : <Clock size={15} />}
+                </span>
+                <div><strong>{task}</strong><small>{time}</small></div>
+                <em className={done ? 'completed' : 'upcoming'}>{state}</em>
+              </div>
+            ))}
+          </div>
+          <div className="dash-card details-card">
+            <div className="card-title">
+              <div><p className="dash-kicker">PATIENT DETAILS</p><h2>Health snapshot</h2></div>
+              <UserRound size={21} />
+            </div>
+            <div className="detail-list">
+              <p><span>Blood group</span><b>B+</b></p>
+              <p><span>Primary language</span><b>Assamese, Hindi</b></p>
+              <p><span>Emergency contact</span><b>+91 98765 43210</b></p>
+              <p><span>Care physician</span><b>Dr. Ananya Bora</b></p>
+            </div>
+          </div>
+          <div className="dash-card insights-card">
+            <div className="card-title">
+              <div><p className="dash-kicker">CARE INSIGHT</p><h2>Today’s note</h2></div>
+              <Sparkles size={21} />
+            </div>
+            <p>Ramesh showed strong recognition during the family-photo activity and responded well to voice prompts.</p>
+            <div><Heart size={16} fill="currentColor" /> Mood: <b>Calm &amp; engaged</b></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}
+
 /* ─── App Root ───────────────────────────────────────────────────── */
 export default function App() {
   const [login, setLogin] = useState(null)
+  const [dashboard, setDashboard] = useState(false)
+  const [dark, setDark] = useState(() => localStorage.getItem('mindcare-theme') === 'dark')
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark-theme', dark)
+    localStorage.setItem('mindcare-theme', dark ? 'dark' : 'light')
+  }, [dark])
+
+  const toggleTheme = () => setDark(value => !value)
 
   /**
    * view:
@@ -721,8 +910,6 @@ export default function App() {
    * restore exactly the right screen.
    */
   useEffect(() => {
-    // Seed the initial history entry (replaceState, not pushState,
-    // so we don't create a duplicate entry on first load)
     window.history.replaceState({ view }, '')
 
     function onPopState(e) {
@@ -734,8 +921,6 @@ export default function App() {
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
-    // Only run once on mount — we seed the initial state
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   /** Push a new view to browser history and update React state */
@@ -751,7 +936,6 @@ export default function App() {
 
   function backToLanding() {
     navigateTo('landing')
-    // Restore scroll position on the landing page
     window.requestAnimationFrame(() =>
       document.querySelector('#home')?.scrollIntoView({ behavior: 'smooth' })
     )
@@ -766,16 +950,17 @@ export default function App() {
     navigateTo(`activity:${activityId}`)
   }
 
+  if (dashboard) {
+    return (
+      <CaregiverDashboard
+        onLogout={() => setDashboard(false)}
+        dark={dark}
+        onToggleTheme={toggleTheme}
+      />
+    )
+  }
 
   // ── Patient experience views ──────────────────────────────────
-  //
-  // Both the dashboard and all activity pages share ONE PatientSessionProvider.
-  // Because React reconciles the provider in the same tree position across
-  // navigation, the session state persists without resetting — the user's
-  // display name (and future profile data) survives moving between pages.
-  //
-  // When a real profile system is added, pass `initialSession` with the
-  // loaded profile data. Nothing else in this block needs to change.
   const isPatientView =
     view === 'patient-dashboard' || view.startsWith('activity:')
 
@@ -783,7 +968,7 @@ export default function App() {
     const activityId = view.startsWith('activity:') ? view.slice(9) : null
 
     return (
-      <PatientSessionProvider /* initialSession={{ ... }} in future */>
+      <PatientSessionProvider>
         {view === 'patient-dashboard'
           ? (
             <PatientDashboard
@@ -802,11 +987,10 @@ export default function App() {
     )
   }
 
-
   // ── Landing page (default) ───────────────────────────────────
   return (
     <>
-      <Navbar openLogin={setLogin} />
+      <Navbar openLogin={setLogin} dark={dark} onToggleTheme={toggleTheme} />
       <main id="main-content" tabIndex={-1}>
         <Hero openLogin={setLogin} />
         <Challenges />
@@ -821,6 +1005,10 @@ export default function App() {
       <LoginModal
         type={login}
         onClose={() => setLogin(null)}
+        onLogin={() => {
+          setLogin(null)
+          setDashboard(true)
+        }}
         onPatientEnter={enterPatientDashboard}
       />
     </>
