@@ -21,6 +21,9 @@ import {
   restoreActivePatientSession,
 } from './patientSession'
 import { authenticatePatient, validateCaregiverPin } from './config/authConfig'
+import { CaregiverRemindersSection } from './reminders/CaregiverRemindersSection'
+import { PatientReminderModal } from './reminders/PatientReminderModal'
+import { usePatientDueReminder } from './reminders/usePatientDueReminder'
 
 
 /* ─── Landing Page Data ─────────────────────────────────────────── */
@@ -1072,6 +1075,14 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showPinModal, setShowPinModal] = useState(false)
 
+  // Smart Reminder notification for due reminders
+  const { dueReminder, handleDone, handleSnooze } = usePatientDueReminder(session?.patientId || 'MC-2048')
+
+  function handleReminderDone(reminder) {
+    handleDone(reminder)
+    setAnnouncement('Done. Well done!')
+  }
+
   function handleHelp() {
     setAnnouncement('Help is ready. A caregiver can assist you from here.')
   }
@@ -1305,6 +1316,15 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
           onSuccess={handlePinSuccess}
         />
       )}
+
+      {/* ── Patient-Facing Smart Reminder Notification ────────────── */}
+      {dueReminder && (
+        <PatientReminderModal
+          reminder={dueReminder}
+          onDone={handleReminderDone}
+          onSnooze={handleSnooze}
+        />
+      )}
     </div>
   )
 }
@@ -1465,6 +1485,9 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme }) {
             </article>
           ))}
         </section>
+        {/* ── Smart Reminders Section ──────────────────────────────── */}
+        <CaregiverRemindersSection patientId="MC-2048" />
+
         <section className="dash-grid">
           <div className="dash-card progress-card">
             <div className="card-title">
