@@ -1,4 +1,4 @@
-﻿/**
+/**
  * patientSession.jsx
  *
  * Lightweight patient session architecture for MindCare NER.
@@ -21,45 +21,37 @@
  */
 
 import { createContext, useContext, useState } from 'react'
+import {
+  DEFAULT_SESSION,
+  DEVICE_SETUP_STORAGE_KEY,
+  ACTIVE_SESSION_STORAGE_KEY,
+  isPatientDeviceSetupComplete,
+  getDeviceSetupProfile,
+  saveDeviceSetup,
+  clearDeviceSetup,
+  isPatientSessionActive,
+  saveActivePatientSession,
+  clearActivePatientSession,
+  getActiveSessionView,
+  createActivePatientSession,
+  restoreActivePatientSession,
+} from './sessionState.js'
 
-/* -- Session shape & defaults ----------------------------------------------- */
-
-/**
- * DEFAULT_SESSION defines every field a real patient profile will contain.
- *
- * All fields are null or false - the dashboard renders correctly with these
- * values and degrades gracefully in every component.
- *
- * Security note: Do NOT store sensitive medical data (diagnoses, medications,
- * test results) in this object, even in the future. This session lives in
- * React state (client memory only) and is not persisted anywhere.
- */
-export const DEFAULT_SESSION = Object.freeze({
-
-  // -- Identity ---------------------------------------------------------------
-  // Set by a real auth / profile system when one is integrated.
-  patientId:   null, // string | null  - unique patient identifier
-  displayName: null, // string | null  - first name used in greeting
-
-  // -- Localisation -----------------------------------------------------------
-  // Defaults to English. Expand with Hindi and North-Eastern language codes.
-  preferredLanguage: 'en', // 'en' | 'hi' | future ISO 639-1 codes
-
-  // -- Accessibility overrides ------------------------------------------------
-  // These supplement OS-level settings (e.g. prefers-reduced-motion).
-  // Stored per-patient once a real profile backend exists.
-  accessibilitySettings: Object.freeze({
-    largeText:     false, // future: bump base font size beyond CSS defaults
-    highContrast:  false, // future: switch to high-contrast colour tokens
-    reducedMotion: false, // future: force reduced motion regardless of OS
-    screenReader:  false, // future: enable extra AT-friendly live regions
-  }),
-
-  // -- Prototype metadata -----------------------------------------------------
-  isAuthenticated:  false, // Always false in prototype - do not set to true here
-  sessionCreatedAt: null,  // Date | null - populated when a real session starts
-
-})
+export {
+  DEFAULT_SESSION,
+  DEVICE_SETUP_STORAGE_KEY,
+  ACTIVE_SESSION_STORAGE_KEY,
+  isPatientDeviceSetupComplete,
+  getDeviceSetupProfile,
+  saveDeviceSetup,
+  clearDeviceSetup,
+  isPatientSessionActive,
+  saveActivePatientSession,
+  clearActivePatientSession,
+  getActiveSessionView,
+  createActivePatientSession,
+  restoreActivePatientSession,
+}
 
 /* -- Context ----------------------------------------------------------------- */
 
@@ -82,41 +74,19 @@ PatientSessionContext.displayName = 'PatientSessionContext'
  *
  * Wrap all patient-experience views (dashboard + activity pages) in this
  * single provider so the session persists across navigation.
- *
- * Props:
- *   children        - patient view components to render
- *   initialSession  - optional partial session merged over DEFAULT_SESSION.
- *                     Pass a real profile here when auth is implemented.
- *                     Defaults to {} (prototype / no-profile mode).
- *
- * Prototype usage (current):
- *   <PatientSessionProvider>
- *     <PatientDashboard ... />
- *   </PatientSessionProvider>
- *
- * Future usage (real profile after login):
- *   <PatientSessionProvider
- *     initialSession={{
- *       patientId:         'p-abc-123',
- *       displayName:       'Asha',
- *       preferredLanguage: 'hi',
- *       accessibilitySettings: { largeText: true },
- *       isAuthenticated:   true,
- *       sessionCreatedAt:  new Date(),
- *     }}
- *   >
- *     <PatientDashboard ... />
- *   </PatientSessionProvider>
  */
-export function PatientSessionProvider({ children, initialSession = {} }) {
+export function PatientSessionProvider({ children, initialSession }) {
+  const safeInitial = initialSession && typeof initialSession === 'object' ? initialSession : {}
   const [session, setSession] = useState(() => ({
     ...DEFAULT_SESSION,
-    ...initialSession,
+    ...safeInitial,
     // Deep-merge accessibilitySettings so both default and override keys
     // are always present, even when only some overrides are supplied.
     accessibilitySettings: {
       ...DEFAULT_SESSION.accessibilitySettings,
-      ...(initialSession.accessibilitySettings ?? {}),
+      ...(safeInitial.accessibilitySettings && typeof safeInitial.accessibilitySettings === 'object'
+        ? safeInitial.accessibilitySettings
+        : {}),
     },
   }))
 

@@ -1,16 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Brain, HeartHandshake, Menu, X, ArrowRight, Sparkles, Gamepad2, Mic,
   BellRing, MapPin, WifiOff, Languages, ShieldCheck, UsersRound, Activity,
   ChevronRight, Home, Check, Stethoscope, Clock3, Phone, Route, Pill,
   Heart, Lightbulb, Music, LogOut, UserRound, CalendarDays, TrendingUp,
-  CircleCheck, AlertCircle, Clock, ChevronDown, Sun, Moon
+  CircleCheck, AlertCircle, Clock, ChevronDown, Sun, Moon, Eye, EyeOff
 } from 'lucide-react'
 import heroImage from './assets/mindcare-hero.png'
 import {
   PatientSessionProvider,
   usePatientSession,
+  isPatientDeviceSetupComplete,
+  saveDeviceSetup,
+  clearDeviceSetup,
+  isPatientSessionActive,
+  saveActivePatientSession,
+  clearActivePatientSession,
+  getActiveSessionView,
+  createActivePatientSession,
+  restoreActivePatientSession,
 } from './patientSession'
+import { authenticatePatient, validateCaregiverPin } from './config/authConfig'
 
 
 /* ─── Landing Page Data ─────────────────────────────────────────── */
@@ -322,6 +332,186 @@ function Footer() {
     </footer>
   )
 }
+function PatientLoginModal({ onClose, onSignIn }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
+  const modalRef = useRef(null)
+
+  useEffect(() => {
+    const previousActiveElement = document.activeElement
+
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = modalRef.current?.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+        previousActiveElement.focus()
+      }
+    }
+  }, [onClose])
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    setError('')
+
+    // Validate inputs & authenticate against the isolated prototype account
+    const result = authenticatePatient(email, password)
+
+    if (result.success) {
+      // Concept 1: Remember that device setup has completed on this device
+      saveDeviceSetup(result.profile)
+
+      // Concept 2: Create and start the active patient session
+      const session = createActivePatientSession(result.profile)
+      saveActivePatientSession(session)
+
+      if (onSignIn) {
+        onSignIn(session)
+      }
+    } else {
+      setError(result.error)
+    }
+  }
+
+  return (
+    <div className="modal-backdrop" onClick={onClose} role="presentation">
+      <div
+        ref={modalRef}
+        className="modal login-modal patient-login-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="patient-login-title"
+        aria-describedby="patient-login-desc"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="modal-x"
+          aria-label="Close login dialog"
+          onClick={onClose}
+          autoFocus
+        >
+          <X size={20} aria-hidden="true" />
+        </button>
+
+        <span className="icon-bubble teal patient-login-icon" aria-hidden="true">
+          <Brain size={24} />
+        </span>
+
+        <h2 id="patient-login-title" className="patient-login-title">
+          Patient Login
+        </h2>
+        <p id="patient-login-desc" className="patient-login-desc">
+          Sign in to continue your care journey.
+        </p>
+
+        <form onSubmit={handleSubmit} className="login-form patient-login-form" noValidate>
+          <label htmlFor="patient-email-input" className="patient-field-label">
+            <span>Email address</span>
+            <input
+              id="patient-email-input"
+              name="email"
+              type="email"
+              className="patient-input"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value)
+                if (error) setError('')
+              }}
+              placeholder="you@example.com"
+              autoComplete="email"
+              required
+            />
+          </label>
+
+          <label htmlFor="patient-password-input" className="patient-field-label">
+            <span>Password</span>
+            <div className="patient-password-wrapper">
+              <input
+                id="patient-password-input"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                className="patient-input patient-input-password"
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value)
+                  if (error) setError('')
+                }}
+                placeholder="Enter password"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                className="patient-password-toggle"
+                onClick={() => setShowPassword(v => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff size={19} aria-hidden="true" />
+                ) : (
+                  <Eye size={19} aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          </label>
+
+          {error && (
+            <div
+              className="patient-login-error"
+              role="alert"
+              aria-live="polite"
+            >
+              <AlertCircle size={17} aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            className="patient-submit-btn"
+            aria-label="Sign In"
+          >
+            <span>Sign In</span>
+            <ArrowRight size={18} aria-hidden="true" />
+          </Button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -509,6 +699,347 @@ const TODAY_ACTIVITY = ACTIVITY_DATA['memory-match']
 
 
 /**
+ * PatientLogoutConfirmModal
+ *
+ * Safe logout confirmation dialog designed specifically for patients with cognitive needs:
+ * - Clear heading: "Are you sure?"
+ * - Calming supportive body: "Do you want to leave the patient dashboard?"
+ * - Safest/default action is "Go Back" (large primary teal button, initially focused)
+ * - Logout action is "Continue" (subtle, secondary outline button, NOT visually dominant)
+ * - Full accessibility: role="dialog", aria-modal="true", keyboard focus trap & Escape key support
+ * - No accidental logout, no swipe gestures, no timeout-based automatic confirmation
+ */
+function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
+  const modalRef = useRef(null)
+  const cancelButtonRef = useRef(null)
+
+  useEffect(() => {
+    // Preserve previously active element to restore focus on unmount
+    const previousActiveElement = document.activeElement
+
+    // Initial focus on the safest default option: "Go Back"
+    cancelButtonRef.current?.focus()
+
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onCancel()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        // Accessible keyboard focus trap
+        const focusableElements = modalRef.current?.querySelectorAll(
+          'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusableElements || focusableElements.length === 0) return
+
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault()
+            lastElement.focus()
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault()
+            firstElement.focus()
+          }
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+        previousActiveElement.focus()
+      }
+    }
+  }, [onCancel])
+
+  return (
+    <div className="modal-backdrop" onClick={onCancel} role="presentation">
+      <div
+        ref={modalRef}
+        className="modal pd-confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-confirm-title"
+        aria-describedby="logout-confirm-desc"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="modal-x"
+          aria-label="Close confirmation dialog and return to dashboard"
+          onClick={onCancel}
+        >
+          <X size={20} aria-hidden="true" />
+        </button>
+
+        <div className="pd-confirm-icon" aria-hidden="true">
+          <LogOut size={26} />
+        </div>
+
+        <h2 id="logout-confirm-title" className="pd-confirm-title">
+          Are you sure?
+        </h2>
+
+        <p id="logout-confirm-desc" className="pd-confirm-desc">
+          Do you want to leave the patient dashboard?
+        </p>
+
+        <div className="pd-confirm-actions">
+          <button
+            ref={cancelButtonRef}
+            type="button"
+            className="pd-confirm-btn-cancel"
+            onClick={onCancel}
+            autoFocus
+          >
+            Go Back
+          </button>
+          <button
+            type="button"
+            className="pd-confirm-btn-proceed"
+            onClick={onConfirm}
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * CaregiverPinModal
+ *
+ * Caregiver PIN authorization dialog for Patient Logout.
+ * Prevents elderly or cognitively-impaired patients from inadvertently
+ * terminating the kiosk session without caregiver supervision.
+ *
+ * Requirements:
+ * - Large, touch-accessible controls
+ * - PIN input (direct keyboard support + on-screen numeric keypad)
+ * - Error message: "That PIN isn't correct. Please try again."
+ * - Does not reveal the correct PIN
+ * - Submit and Cancel actions
+ * - Accessible focus management and keyboard traps (Escape to cancel)
+ * - Safe prototype PIN validation isolated in authConfig
+ */
+function CaregiverPinModal({ onCancel, onSuccess }) {
+  const [pin, setPin] = useState('')
+  const [error, setError] = useState('')
+  const modalRef = useRef(null)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    const previousActiveElement = document.activeElement
+    inputRef.current?.focus()
+
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onCancel()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = modalRef.current?.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+        previousActiveElement.focus()
+      }
+    }
+  }, [onCancel])
+
+  function handleKeypadPress(val) {
+    setError('')
+    if (val === 'clear') {
+      setPin('')
+      inputRef.current?.focus()
+      return
+    }
+    if (val === 'backspace') {
+      setPin(prev => prev.slice(0, -1))
+      inputRef.current?.focus()
+      return
+    }
+    if (pin.length < 8) {
+      setPin(prev => prev + val)
+      inputRef.current?.focus()
+    }
+  }
+
+  function handleInputChange(e) {
+    // Only accept numeric digits
+    const val = e.target.value.replace(/\D/g, '')
+    if (val.length <= 8) {
+      setPin(val)
+      setError('')
+    }
+  }
+
+  function handleSubmit(e) {
+    if (e) e.preventDefault()
+    setError('')
+
+    const result = validateCaregiverPin(pin)
+    if (result.success) {
+      onSuccess()
+    } else {
+      setError(result.error || "That PIN isn't correct. Please try again.")
+      setPin('')
+      inputRef.current?.focus()
+    }
+  }
+
+  return (
+    <div className="modal-backdrop" onClick={onCancel} role="presentation">
+      <div
+        ref={modalRef}
+        className="modal caregiver-pin-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="caregiver-pin-title"
+        aria-describedby="caregiver-pin-desc"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="modal-x"
+          aria-label="Cancel and return to dashboard"
+          onClick={onCancel}
+        >
+          <X size={20} aria-hidden="true" />
+        </button>
+
+        <div className="caregiver-pin-icon" aria-hidden="true">
+          <ShieldCheck size={26} />
+        </div>
+
+        <h2 id="caregiver-pin-title" className="caregiver-pin-title">
+          Caregiver Authorization
+        </h2>
+
+        <p id="caregiver-pin-desc" className="caregiver-pin-desc">
+          Enter caregiver PIN to end this session.
+        </p>
+
+        {error && (
+          <div className="caregiver-pin-error" role="alert" aria-live="assertive">
+            <AlertCircle size={17} aria-hidden="true" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="pin-input-wrap">
+            <label htmlFor="caregiver-pin-input" className="sr-only">
+              Caregiver PIN
+            </label>
+            <input
+              id="caregiver-pin-input"
+              ref={inputRef}
+              type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={8}
+              autoComplete="off"
+              value={pin}
+              onChange={handleInputChange}
+              placeholder="••••"
+              className="caregiver-pin-input"
+              aria-label="Caregiver numeric PIN"
+              aria-invalid={Boolean(error)}
+            />
+          </div>
+
+          {/* On-screen numeric keypad for touch/kiosk accessibility */}
+          <div className="caregiver-pin-keypad" role="group" aria-label="PIN keypad">
+            {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
+              <button
+                key={num}
+                type="button"
+                className="pin-key"
+                onClick={() => handleKeypadPress(num)}
+                aria-label={`Digit ${num}`}
+              >
+                {num}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="pin-key pin-key-util"
+              onClick={() => handleKeypadPress('clear')}
+              aria-label="Clear PIN"
+            >
+              Clear
+            </button>
+            <button
+              type="button"
+              className="pin-key"
+              onClick={() => handleKeypadPress('0')}
+              aria-label="Digit 0"
+            >
+              0
+            </button>
+            <button
+              type="button"
+              className="pin-key pin-key-util"
+              onClick={() => handleKeypadPress('backspace')}
+              aria-label="Delete last digit"
+            >
+              ⌫
+            </button>
+          </div>
+
+          <div className="caregiver-pin-actions">
+            <button type="submit" className="pin-submit-btn">
+              Submit
+            </button>
+            <button
+              type="button"
+              className="pin-cancel-btn"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+/**
  * PatientDashboard
  * Full elder-friendly dashboard:
  * header → skip link → breadcrumb → welcome → activity grid → today's activity panel
@@ -516,27 +1047,57 @@ const TODAY_ACTIVITY = ACTIVITY_DATA['memory-match']
  * Props:
  *   onHome             — go to landing page
  *   onNavigateActivity — go to an activity placeholder page (receives activityId)
+ *   onLogout           — optional logout handler to terminate active session & navigate to landing
  *
  * Reads from PatientSessionContext:
  *   session.displayName — personalises the greeting; falls back gracefully when null
  */
-function PatientDashboard({ onHome, onNavigateActivity }) {
+function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
   // Session — read displayName for the greeting.
-  // displayName is null in prototype mode; the greeting degrades gracefully.
+  // displayName is null if unavailable; the greeting degrades gracefully to "Good Morning!".
+  // Do NOT expose email, password, or sensitive medical info on the dashboard.
   const [session] = usePatientSession()
   const base = getTimeGreeting()                   // e.g. "Good Morning"
-  const greeting = session.displayName
-    ? `${base}, ${session.displayName}!`           // "Good Morning, Asha!"
-    : `${base}!`                                   // "Good Morning!"
+  const displayName = session?.displayName || null
   const localDate = getLocalDate()                 // e.g. "Friday, September 4"
 
+  // Today's progress status for the prototype (1 of 3 activities completed)
+  // TODO: In production, fetch daily patient activity progress from backend:
+  // GET /api/v1/patient/activities/today-progress
+  const completedCount = 1
+  const totalTodayActivities = 3
+  const progressPercent = Math.round((completedCount / totalTodayActivities) * 100)
+
   const [announcement, setAnnouncement] = useState('')
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [showPinModal, setShowPinModal] = useState(false)
 
   function handleHelp() {
     setAnnouncement('Help is ready. A caregiver can assist you from here.')
   }
   function handleVoice() {
     setAnnouncement('Voice support is ready for the next prototype step.')
+  }
+  function handleLogoutClick() {
+    setShowLogoutConfirm(true)
+  }
+  function handleCancelLogout() {
+    setShowLogoutConfirm(false)
+  }
+  function handleConfirmLogout() {
+    setShowLogoutConfirm(false)
+    setShowPinModal(true)
+  }
+  function handleCancelPin() {
+    setShowPinModal(false)
+  }
+  function handlePinSuccess() {
+    setShowPinModal(false)
+    if (onLogout) {
+      onLogout()
+    } else {
+      onHome()
+    }
   }
 
   return (
@@ -587,20 +1148,85 @@ function PatientDashboard({ onHome, onNavigateActivity }) {
           </div>
         )}
 
-        {/* ── Welcome ───────────────────────────────────────────── */}
+        {/* ── Welcome & Patient Display Name ────────────────────── */}
         {/*
-          greeting:  personalised when session.displayName is set,
-                     falls back to "Good Morning!" when null (prototype / no-profile).
+          Greeting degrades gracefully:
+          If displayName exists:
+            Good Morning!
+            [DisplayName]
+            Let's choose an activity for today.
+          If displayName is unavailable:
+            Good Morning!
+            Let's choose an activity for today.
         */}
         <section className="pd-welcome" aria-labelledby="pd-welcome-heading">
-          <h1 id="pd-welcome-heading" className="pd-welcome-title">{greeting}</h1>
+          <h1 id="pd-welcome-heading" className="pd-welcome-title">
+            {base}!
+            {displayName && (
+              <span className="pd-welcome-patient-name">{displayName}</span>
+            )}
+          </h1>
           <p className="pd-welcome-date" aria-hidden="true">{localDate}</p>
           <p className="pd-welcome-sub">Let's choose an activity for today.</p>
         </section>
 
+        {/* ── Today's Progress ──────────────────────────────────── */}
+        <section className="pd-progress-card" aria-labelledby="pd-progress-heading">
+          <div className="pd-progress-content">
+            <div className="pd-progress-header">
+              <div className="pd-progress-title-wrap">
+                <CircleCheck size={26} aria-hidden="true" />
+                <h2 id="pd-progress-heading" className="pd-progress-title">Today's Progress</h2>
+              </div>
+              <span className="pd-progress-count" aria-label={`${completedCount} of ${totalTodayActivities} activities completed`}>
+                {completedCount} of {totalTodayActivities} Completed
+              </span>
+            </div>
+            <div
+              className="pd-progress-bar-track"
+              role="progressbar"
+              aria-valuenow={progressPercent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Today's activity progress"
+            >
+              <div className="pd-progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+            </div>
+            <p className="pd-progress-sub">Great job today! You're making gentle, steady progress.</p>
+          </div>
+          <div className="pd-progress-badge" aria-hidden="true">
+            <Sparkles size={20} />
+            <span>Keep Going</span>
+          </div>
+        </section>
 
+        {/* ── Recommended Activity (Featured) ──────────────────── */}
+        <section className="pd-today-panel" aria-labelledby="pd-today-heading">
+          <div className="pd-today-content">
+            <div className="pd-recommended-badge" aria-hidden="true">
+              <Sparkles size={14} />
+              <span>Recommended Activity</span>
+            </div>
+            <p className="pd-today-label">
+              <span aria-hidden="true">⭐ </span>Featured For You
+            </p>
+            <h2 id="pd-today-heading" className="pd-today-title">{TODAY_ACTIVITY.title}</h2>
+            <p className="pd-today-desc">{TODAY_ACTIVITY.subtitle}. Let's try a gentle memory exercise together.</p>
+          </div>
+          <button
+            type="button"
+            className="pd-start-btn"
+            onClick={() => onNavigateActivity(TODAY_ACTIVITY.id)}
+            aria-label={`Start recommended activity: ${TODAY_ACTIVITY.title}`}
+          >
+            <span>Start Activity</span>
+            <ArrowRight size={30} aria-hidden="true" />
+          </button>
+        </section>
+
+        {/* ── Today's Activities ───────────────────────────────── */}
         <section className="pd-activities-section" aria-labelledby="pd-activities-heading">
-          <h2 id="pd-activities-heading" className="pd-section-heading">Activities</h2>
+          <h2 id="pd-activities-heading" className="pd-section-heading">Today's Activities</h2>
           {/*
             Each card is a <button> so it is:
             • Reachable by Tab key
@@ -629,27 +1255,56 @@ function PatientDashboard({ onHome, onNavigateActivity }) {
           </div>
         </section>
 
-        {/* ── Today's Activity Panel ────────────────────────────── */}
-        <section className="pd-today-panel" aria-labelledby="pd-today-heading">
-          <div className="pd-today-content">
-            <p className="pd-today-label">
-              <span aria-hidden="true">⭐ </span>Today's Activity
-            </p>
-            <h2 id="pd-today-heading" className="pd-today-title">{TODAY_ACTIVITY.title}</h2>
-            <p className="pd-today-desc">Let's try a simple memory activity.</p>
+        {/* ── Danger Zone Divider & Section ──────────────────────
+          Separated from normal activity cards at the bottom of the dashboard.
+          Protects patients with cognitive difficulties from accidental logouts.
+          - Visually distinct and secondary
+          - Not styled as a primary CTA
+          - No alarming or flashing animations
+          - Logout logic is intentionally deferred to upcoming milestone
+        */}
+        <hr className="pd-danger-divider" aria-hidden="true" />
+
+        <section className="pd-danger-section" aria-labelledby="pd-danger-heading">
+          <div className="pd-danger-card">
+            <div className="pd-danger-info">
+              <span className="pd-danger-tag">Device Session</span>
+              <h2 id="pd-danger-heading" className="pd-danger-title">Danger Zone</h2>
+              <p className="pd-danger-desc">Leaving this device will end the patient session.</p>
+            </div>
+            {/*
+              TODO: Implement full logout confirmation and session termination
+              in the next milestone.
+            */}
+            <button
+              type="button"
+              className="pd-logout-btn"
+              onClick={handleLogoutClick}
+              aria-label="Log Out. Leaving this device will end the patient session."
+            >
+              <LogOut size={18} aria-hidden="true" />
+              <span>Log Out</span>
+            </button>
           </div>
-          <button
-            type="button"
-            className="pd-start-btn"
-            onClick={() => onNavigateActivity(TODAY_ACTIVITY.id)}
-            aria-label={`Start today's activity: ${TODAY_ACTIVITY.title}`}
-          >
-            <span>Start Activity</span>
-            <ArrowRight size={30} aria-hidden="true" />
-          </button>
         </section>
 
       </main>
+
+      {/* ── Safe Logout Confirmation Dialog ────────────────────────── */}
+      {showLogoutConfirm && (
+        <PatientLogoutConfirmModal
+          onCancel={handleCancelLogout}
+          onConfirm={handleConfirmLogout}
+        />
+      )}
+
+      {/* ── Caregiver PIN Authorization Dialog ─────────────────────── */}
+      {showPinModal && (
+        <CaregiverPinModal
+          onCancel={handleCancelPin}
+          onSuccess={handlePinSuccess}
+        />
+      )}
     </div>
   )
 }
@@ -899,7 +1554,29 @@ export default function App() {
    *   'activity:{id}'        — activity placeholder for the given id
    *                            id is a key in ACTIVITY_DATA
    */
-  const [view, setView] = useState('landing')
+  const [view, setView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const sessionView = getActiveSessionView()
+      const historyView = window.history.state?.view
+      // If user has an active session running in this tab, restore exact view
+      if (isPatientSessionActive()) {
+        if (sessionView && (sessionView === 'patient-dashboard' || sessionView.startsWith('activity:'))) {
+          return sessionView
+        }
+        if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:'))) {
+          return historyView
+        }
+        return 'patient-dashboard'
+      }
+      // If returning via browser history and device setup was completed
+      if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:'))) {
+        if (isPatientDeviceSetupComplete()) {
+          return historyView
+        }
+      }
+    }
+    return 'landing'
+  })
 
   /* ── Browser history support ──────────────────────────────────
    * pushState on every navigation so the browser's Back button
@@ -927,11 +1604,62 @@ export default function App() {
   function navigateTo(nextView) {
     setView(nextView)
     window.history.pushState({ view: nextView }, '')
+    if (nextView === 'patient-dashboard' || nextView.startsWith('activity:')) {
+      const current = activeSession || restoreActivePatientSession()
+      if (current) {
+        saveActivePatientSession(current, nextView)
+      }
+    }
   }
 
-  function enterPatientDashboard() {
+  // ── Patient State Architecture ──────────────────────────────
+  // Concept 2: Active patient session.
+  // Restores seamlessly on browser refresh if session was active or returning.
+  const [activeSession, setActiveSession] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const sessionView = getActiveSessionView()
+      const historyView = window.history.state?.view
+      if (
+        isPatientSessionActive() ||
+        (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:')))
+      ) {
+        const session = restoreActivePatientSession()
+        if (session) {
+          const targetView = sessionView || historyView || 'patient-dashboard'
+          saveActivePatientSession(session, targetView)
+          return session
+        }
+      }
+    }
+    return null
+  })
+
+  function enterPatientDashboard(sessionData) {
+    // Activate the provided session or restore an active session from device setup
+    const sessionToActivate = sessionData || activeSession || restoreActivePatientSession()
+    if (sessionToActivate) {
+      setActiveSession(sessionToActivate)
+      saveActivePatientSession(sessionToActivate, 'patient-dashboard')
+    }
     setLogin(null)
     navigateTo('patient-dashboard')
+  }
+
+  function handleOpenLogin(type) {
+    if (type === 'Patient') {
+      // 2. While the patient session is active:
+      // Patient Login -> Patient Dashboard directly
+      if (isPatientSessionActive()) {
+        const session = activeSession || restoreActivePatientSession()
+        enterPatientDashboard(session)
+        return
+      }
+      // 1. First-time login, or 4. After logout:
+      // Show Email + Password login modal
+      setLogin('Patient')
+      return
+    }
+    setLogin(type)
   }
 
   function backToLanding() {
@@ -939,6 +1667,16 @@ export default function App() {
     window.requestAnimationFrame(() =>
       document.querySelector('#home')?.scrollIntoView({ behavior: 'smooth' })
     )
+  }
+
+  function handlePatientLogout() {
+    // 1. Clear the CURRENT active patient session (in tab storage & React state)
+    clearActivePatientSession()
+    setActiveSession(null)
+    // 2. Clear/reset the persistent "patient setup/login completed" state
+    clearDeviceSetup()
+    // 3. Return to Landing Page
+    backToLanding()
   }
 
   function backToDashboard() {
@@ -968,12 +1706,13 @@ export default function App() {
     const activityId = view.startsWith('activity:') ? view.slice(9) : null
 
     return (
-      <PatientSessionProvider>
+      <PatientSessionProvider initialSession={activeSession ?? {}}>
         {view === 'patient-dashboard'
           ? (
             <PatientDashboard
               onHome={backToLanding}
               onNavigateActivity={navigateActivity}
+              onLogout={handlePatientLogout}
             />
           ) : (
             <ActivityPlaceholder
@@ -990,27 +1729,34 @@ export default function App() {
   // ── Landing page (default) ───────────────────────────────────
   return (
     <>
-      <Navbar openLogin={setLogin} dark={dark} onToggleTheme={toggleTheme} />
+      <Navbar openLogin={handleOpenLogin} dark={dark} onToggleTheme={toggleTheme} />
       <main id="main-content" tabIndex={-1}>
-        <Hero openLogin={setLogin} />
+        <Hero openLogin={handleOpenLogin} />
         <Challenges />
         <Features />
         <HowItWorks />
         <SafeHome />
         <Benefits />
         <Future />
-        <CTA openLogin={setLogin} />
+        <CTA openLogin={handleOpenLogin} />
       </main>
       <Footer />
-      <LoginModal
-        type={login}
-        onClose={() => setLogin(null)}
-        onLogin={() => {
-          setLogin(null)
-          setDashboard(true)
-        }}
-        onPatientEnter={enterPatientDashboard}
-      />
+      {login === 'Patient' ? (
+        <PatientLoginModal
+          onClose={() => setLogin(null)}
+          onSignIn={enterPatientDashboard}
+        />
+      ) : (
+        <LoginModal
+          type={login}
+          onClose={() => setLogin(null)}
+          onLogin={() => {
+            setLogin(null)
+            setDashboard(true)
+          }}
+          onPatientEnter={enterPatientDashboard}
+        />
+      )}
     </>
   )
 }
