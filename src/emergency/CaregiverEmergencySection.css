@@ -1,0 +1,364 @@
+/* Caregiver Emergency Section Styles */
+
+.ces-card {
+  margin-top: 24px;
+}
+
+.ces-intro {
+  color: #55747a;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.ces-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.ces-setting-box {
+  background: #f8fbfb;
+  border: 1px solid #dbebea;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ces-box-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ces-icon-bubble {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ces-icon-bubble.teal {
+  background: #e0f4f1;
+  color: #157f7a;
+}
+
+.ces-icon-bubble.blue {
+  background: #e1f0fa;
+  color: #176d9c;
+}
+
+.ces-icon-bubble.coral {
+  background: #fde8e6;
+  color: #c62828;
+}
+
+.ces-box-title h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: #173944;
+}
+
+.ces-box-title p {
+  margin: 0;
+  font-size: 12px;
+  color: #66808a;
+}
+
+.ces-contact-details,
+.ces-location-details,
+.ces-config-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ces-contact-name strong {
+  font-size: 16px;
+  color: #173944;
+}
+
+.ces-contact-name span {
+  font-size: 13px;
+  color: #55747a;
+}
+
+.ces-contact-phone {
+  font-size: 15px;
+  font-weight: 700;
+  color: #157f7a;
+  margin: 0;
+}
+
+.ces-contact-sec-phone {
+  font-size: 12px;
+  color: #66808a;
+  margin: 0;
+}
+
+.ces-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ces-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.ces-action-btn.edit {
+  background: #eef8f6;
+  color: #157f7a;
+  border-color: #cdebe5;
+}
+
+.ces-action-btn.edit:hover {
+  background: #def1ee;
+}
+
+.ces-action-btn.delete {
+  background: #fdf2f2;
+  color: #c62828;
+  border-color: #fadada;
+}
+
+.ces-action-btn.delete:hover {
+  background: #fde6e6;
+}
+
+.ces-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ces-empty-state p {
+  margin: 0;
+  font-size: 13px;
+  color: #8faab0;
+}
+
+.ces-add-btn {
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+.ces-loc-address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  color: #173944;
+}
+
+.ces-loc-coords {
+  font-size: 12px;
+  color: #66808a;
+  margin: 0 0 10px;
+}
+
+.ces-config-number strong {
+  font-size: 18px;
+  color: #c62828;
+}
+
+.ces-config-number {
+  margin: 0;
+  font-size: 14px;
+  color: #55747a;
+}
+
+.ces-config-label {
+  font-size: 12px;
+  color: #66808a;
+  margin: 0 0 10px;
+}
+
+/* ─── Modal Styles ───────────────────────────────────────────────── */
+.ces-modal {
+  max-width: 520px;
+  text-align: left;
+  padding: 32px 28px;
+}
+
+.ces-modal h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.ces-modal-sub {
+  font-size: 14px;
+  color: #55747a;
+  margin: 0 0 20px;
+}
+
+.ces-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fde8e8;
+  border: 1px solid #f8b4b4;
+  color: #9b1c1c;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.ces-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ces-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #355962;
+}
+
+.ces-form input {
+  width: 100%;
+  border: 1px solid #d5e4e3;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+}
+
+.ces-form input:focus {
+  border-color: #157f7a;
+  box-shadow: 0 0 0 3px rgba(21, 127, 122, 0.15);
+}
+
+.ces-coords-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ces-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* ─── Dark Theme ─────────────────────────────────────────────────── */
+.dark-theme .ces-setting-box {
+  background: #14242c;
+  border-color: #27434d;
+}
+
+.dark-theme .ces-box-title h3,
+.dark-theme .ces-contact-name strong,
+.dark-theme .ces-loc-address {
+  color: #eef9f8;
+}
+
+.dark-theme .ces-box-title p,
+.dark-theme .ces-loc-coords,
+.dark-theme .ces-config-label {
+  color: #8faab0;
+}
+
+.dark-theme .ces-action-btn.edit {
+  background: #18333b;
+  border-color: #2e5a66;
+  color: #7ee0d4;
+}
+
+.dark-theme .ces-action-btn.delete {
+  background: #331a1a;
+  border-color: #632d2d;
+  color: #ff8a80;
+}
+
+.dark-theme .ces-modal {
+  background: #172830;
+  border-color: #29424b;
+  color: #e8f2f2;
+}
+
+.dark-theme .ces-modal h2 {
+  color: #eef9f8;
+}
+
+.dark-theme .ces-modal-sub {
+  color: #a9c1c5;
+}
+
+.dark-theme .ces-form label {
+  color: #cbe3e6;
+}
+
+.dark-theme .ces-form input {
+  background: #102128;
+  border-color: #38545b;
+  color: #edf8f8;
+}
+
+.ces-preview-footer {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ces-preview-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #157f7a, #0e5e5a);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ces-preview-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 127, 122, 0.25);
+}
+
+@media (max-width: 900px) {
+  .ces-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ces-preview-footer {
+    justify-content: stretch;
+  }
+
+  .ces-preview-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

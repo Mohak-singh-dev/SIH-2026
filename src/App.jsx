@@ -4,9 +4,17 @@ import {
   BellRing, MapPin, WifiOff, Languages, ShieldCheck, UsersRound, Activity,
   ChevronRight, Home, Check, Stethoscope, Clock3, Phone, Route, Pill,
   Heart, Lightbulb, Music, LogOut, UserRound, CalendarDays, TrendingUp,
-  CircleCheck, AlertCircle, Clock, ChevronDown, Sun, Moon, Eye, EyeOff
+  CircleCheck, AlertCircle, Clock, ChevronDown, Sun, Moon, Eye, EyeOff,
+  NotebookPen
 } from 'lucide-react'
 import heroImage from './assets/mindcare-hero.png'
+import GamesHub from './games/GamesHub/GamesHub'
+import MemoryMatch from './games/MemoryMatch/MemoryMatch'
+import WordRecall from './games/WordRecall/WordRecall'
+import DifferentObject from './games/DifferentObject/DifferentObject'
+import TakeMeHome from './emergency/TakeMeHome'
+import CaregiverEmergencySection from './emergency/CaregiverEmergencySection'
+import { getEmergencyContact } from './emergency/emergencyContactService'
 import {
   PatientSessionProvider,
   usePatientSession,
@@ -178,20 +186,52 @@ function Challenges() {
     </section>
   )
 }
-function Features() {
+function Features({ onOpenGames, onOpenTakeMeHome }) {
   return (
     <section className="section" id="features">
       <div className="container">
         <SectionTitle eyebrow="A connected care ecosystem" title="One platform. Complete cognitive care." text="Gentle, practical support that brings patients, caregivers and healthcare workers closer together." />
         <div className="feature-grid">
-          {features.map(([title, Icon, text], i) => (
-            <article className="feature-card" key={title}>
-              <span className={`icon-bubble ${['blue', 'violet', 'teal', 'coral'][i % 4]}`}><Icon size={21} /></span>
-              <h3>{title}</h3>
-              <p>{text}</p>
-              <span className="feature-arrow"><ArrowRight size={17} /></span>
-            </article>
-          ))}
+          {features.map(([title, Icon, text], i) => {
+            const isGames = title === 'Cognitive Games'
+            const isSafeHome = title === 'Safe Return Home'
+            const isClickable = isGames || isSafeHome
+            const handleClick = isGames ? onOpenGames : (isSafeHome ? onOpenTakeMeHome : undefined)
+
+            return (
+              <article
+                className="feature-card"
+                key={title}
+                onClick={handleClick}
+                style={isClickable ? { cursor: 'pointer' } : undefined}
+                role={isClickable ? 'button' : undefined}
+                tabIndex={isClickable ? 0 : undefined}
+                onKeyDown={isClickable ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    handleClick?.()
+                  }
+                } : undefined}
+              >
+                <span className={`icon-bubble ${['blue', 'violet', 'teal', 'coral'][i % 4]}`}><Icon size={21} /></span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                {isGames && (
+                  <span className="feature-arrow" style={{ color: '#157f7a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    Explore Games <ArrowRight size={17} />
+                  </span>
+                )}
+                {isSafeHome && (
+                  <span className="feature-arrow" style={{ color: '#157f7a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    Take Me Home &amp; SOS <ArrowRight size={17} />
+                  </span>
+                )}
+                {!isClickable && (
+                  <span className="feature-arrow"><ArrowRight size={17} /></span>
+                )}
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>
@@ -222,7 +262,7 @@ function HowItWorks() {
     </section>
   )
 }
-function SafeHome() {
+function SafeHome({ onOpenTakeMeHome }) {
   return (
     <section className="section" id="safe-home">
       <div className="container safe-home">
@@ -232,22 +272,36 @@ function SafeHome() {
           <div className="map-road road-b" />
           <div className="pin pin-home"><Home size={21} fill="currentColor" /></div>
           <div className="pin pin-user"><span /></div>
-          <div className="home-button"><MapPin size={20} /><span>TAKE ME<br />HOME</span></div>
+          <button
+            type="button"
+            className="home-button"
+            onClick={onOpenTakeMeHome}
+            aria-label="Open Take Me Home & SOS screen"
+            style={{ cursor: 'pointer', border: 'none', font: 'inherit' }}
+          >
+            <MapPin size={20} />
+            <span>TAKE ME<br />HOME</span>
+          </button>
           <div className="location-note">
             <span className="icon-bubble teal"><Route size={17} /></span>
             <div><small>Saved location</small><strong>Home • 1.2 km away</strong></div>
           </div>
         </div>
         <div className="safe-copy">
-          <span className="eyebrow"><MapPin size={14} /> Future safety feature</span>
+          <span className="eyebrow"><MapPin size={14} /> Safety &amp; SOS assistance</span>
           <h2>Lost or confused? <em>Let us help you get home.</em></h2>
-          <p>Offline-assisted navigation will use pre-downloaded map information and GPS location to guide an elderly user toward their saved home location.</p>
+          <p>Offline-assisted navigation uses your compass direction and GPS location to guide an elderly user toward their saved home location with instant emergency SOS support.</p>
           <div className="safe-list">
-            {['Large emergency-friendly button', 'Simple voice-guided directions', 'GPS location assistance', 'Option to contact caregivers'].map(x => (
+            {['Large emergency-friendly SOS button', 'Simple voice-guided directions', 'GPS location assistance', 'One-tap call to caregiver or 112'].map(x => (
               <span key={x}><Check size={16} />{x}</span>
             ))}
           </div>
-          <p className="disclaimer"><Lightbulb size={16} /> This feature assists users and caregivers; it does not replace supervision or emergency services.</p>
+          <div style={{ marginTop: 20 }}>
+            <Button onClick={onOpenTakeMeHome}>
+              Open Take Me Home &amp; SOS <ArrowRight size={18} />
+            </Button>
+          </div>
+          <p className="disclaimer"><Lightbulb size={16} /> Navigation and SOS features provide assistance and do not replace caregiver supervision or emergency services.</p>
         </div>
       </div>
     </section>
@@ -685,6 +739,8 @@ const ACTIVITY_DATA = {
   'talk-recall':     { id: 'talk-recall',     title: 'Talk & Recall',    subtitle: 'Talk about familiar things', Icon: Mic,      colorClass: 'pd-card-coral',  placeholder: 'Talking activities will be available here.'         },
   // Today's featured activity (START ACTIVITY button)
   'memory-match':    { id: 'memory-match',    title: 'Memory Match',     subtitle: 'A simple memory activity',   Icon: Brain,    colorClass: 'pd-card-teal',   placeholder: 'The memory matching activity will be available here.' },
+  'word-recall':     { id: 'word-recall',     title: 'Word Recall',      subtitle: 'Word recall & memory',       Icon: NotebookPen, colorClass: 'pd-card-violet', placeholder: 'Word recall activity will be available here.' },
+  'different-object': { id: 'different-object', title: 'Find the Different Object', subtitle: 'Category odd-one-out', Icon: Sparkles, colorClass: 'pd-card-coral', placeholder: 'Category game will be available here.' },
 }
 
 
@@ -1055,7 +1111,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
  * Reads from PatientSessionContext:
  *   session.displayName — personalises the greeting; falls back gracefully when null
  */
-function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
+function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHome }) {
   // Session — read displayName for the greeting.
   // displayName is null if unavailable; the greeting degrades gracefully to "Good Morning!".
   // Do NOT expose email, password, or sensitive medical info on the dashboard.
@@ -1084,7 +1140,11 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
   }
 
   function handleHelp() {
-    setAnnouncement('Help is ready. A caregiver can assist you from here.')
+    if (onOpenTakeMeHome) {
+      onOpenTakeMeHome()
+    } else {
+      setAnnouncement('Help is ready. A caregiver can assist you from here.')
+    }
   }
   function handleVoice() {
     setAnnouncement('Voice support is ready for the next prototype step.')
@@ -1266,6 +1326,58 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout }) {
           </div>
         </section>
 
+        {/* ── Take Me Home & Emergency SOS Section ────────────────── */}
+        <section className="pd-safety-section" aria-labelledby="pd-safety-heading" style={{ marginTop: 28, marginBottom: 12 }}>
+          <div className="pd-safety-card" style={{
+            background: 'linear-gradient(135deg, #edf8f6 0%, #e0f4f1 100%)',
+            border: '2px solid #b2dfdb',
+            borderRadius: 20,
+            padding: '24px 28px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 20,
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <span className="icon-bubble teal" style={{ width: 52, height: 52, borderRadius: 14 }}>
+                <Home size={28} />
+              </span>
+              <div>
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#157f7a', textTransform: 'uppercase' }}>
+                  Safety &amp; Assistance
+                </span>
+                <h3 id="pd-safety-heading" style={{ margin: '3px 0 4px', fontSize: 21, color: '#173944', fontFamily: 'Fraunces, Georgia, serif' }}>
+                  Take Me Home &amp; SOS
+                </h3>
+                <p style={{ margin: 0, fontSize: 14, color: '#55747a' }}>
+                  Compass navigation toward home and direct emergency contact support.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onOpenTakeMeHome}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                fontSize: 16,
+                fontWeight: 700,
+                padding: '14px 24px',
+                minHeight: 52,
+                borderRadius: 14,
+                boxShadow: '0 6px 18px rgba(21, 127, 122, 0.25)'
+              }}
+            >
+              <span>Take Me Home &amp; SOS</span>
+              <ArrowRight size={20} aria-hidden="true" />
+            </button>
+          </div>
+        </section>
+
         {/* ── Danger Zone Divider & Section ──────────────────────
           Separated from normal activity cards at the bottom of the dashboard.
           Protects patients with cognitive difficulties from accidental logouts.
@@ -1429,7 +1541,7 @@ function ActivityPlaceholder({ activityId, onHome, onDashboard }) {
 }
 
 /* ─── Caregiver Dashboard ────────────────────────────────────────── */
-function CaregiverDashboard({ onLogout, dark, onToggleTheme }) {
+function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome }) {
   const stats = [
     ['Today’s activity', '42 min', Clock3, 'teal'],
     ['Cognitive score', '72 / 100', TrendingUp, 'violet'],
@@ -1488,6 +1600,9 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme }) {
         {/* ── Smart Reminders Section ──────────────────────────────── */}
         <CaregiverRemindersSection patientId="MC-2048" />
 
+        {/* ── Emergency & Safety Settings Section ────────────────── */}
+        <CaregiverEmergencySection onPreviewTakeMeHome={onOpenTakeMeHome} />
+
         <section className="dash-grid">
           <div className="dash-card progress-card">
             <div className="card-title">
@@ -1539,7 +1654,7 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme }) {
             <div className="detail-list">
               <p><span>Blood group</span><b>B+</b></p>
               <p><span>Primary language</span><b>Assamese, Hindi</b></p>
-              <p><span>Emergency contact</span><b>+91 98765 43210</b></p>
+              <p><span>Emergency contact</span><b>{getEmergencyContact()?.phone || 'Not set'}</b></p>
               <p><span>Care physician</span><b>Dr. Ananya Bora</b></p>
             </div>
           </div>
@@ -1573,8 +1688,10 @@ export default function App() {
   /**
    * view:
    *   'landing'              — landing page
+   *   'games'                — cognitive games hub
+   *   'take-me-home'         — safe home navigation and SOS assistance
    *   'patient-dashboard'    — patient dashboard
-   *   'activity:{id}'        — activity placeholder for the given id
+   *   'activity:{id}'        — activity page for the given id (memory-match, word-recall, etc.)
    *                            id is a key in ACTIVITY_DATA
    */
   const [view, setView] = useState(() => {
@@ -1583,19 +1700,22 @@ export default function App() {
       const historyView = window.history.state?.view
       // If user has an active session running in this tab, restore exact view
       if (isPatientSessionActive()) {
-        if (sessionView && (sessionView === 'patient-dashboard' || sessionView.startsWith('activity:'))) {
+        if (sessionView && (sessionView === 'patient-dashboard' || sessionView.startsWith('activity:') || sessionView === 'games' || sessionView === 'take-me-home')) {
           return sessionView
         }
-        if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:'))) {
+        if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home')) {
           return historyView
         }
         return 'patient-dashboard'
       }
       // If returning via browser history and device setup was completed
-      if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:'))) {
-        if (isPatientDeviceSetupComplete()) {
+      if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home')) {
+        if (isPatientDeviceSetupComplete() || historyView === 'games' || historyView === 'take-me-home' || historyView.startsWith('activity:')) {
           return historyView
         }
+      }
+      if (historyView === 'games' || historyView === 'take-me-home' || historyView?.startsWith('activity:')) {
+        return historyView
       }
     }
     return 'landing'
@@ -1627,7 +1747,7 @@ export default function App() {
   function navigateTo(nextView) {
     setView(nextView)
     window.history.pushState({ view: nextView }, '')
-    if (nextView === 'patient-dashboard' || nextView.startsWith('activity:')) {
+    if (nextView === 'patient-dashboard' || nextView.startsWith('activity:') || nextView === 'games' || nextView === 'take-me-home') {
       const current = activeSession || restoreActivePatientSession()
       if (current) {
         saveActivePatientSession(current, nextView)
@@ -1706,9 +1826,40 @@ export default function App() {
     navigateTo('patient-dashboard')
   }
 
-  /** Navigate to any activity placeholder page */
+  /** Navigate to any activity or game page */
   function navigateActivity(activityId) {
-    navigateTo(`activity:${activityId}`)
+    if (activityId === 'games' || activityId === 'brain-games') {
+      navigateTo('games')
+    } else if (activityId === 'memory-activity') {
+      navigateTo('activity:word-recall')
+    } else {
+      navigateTo(`activity:${activityId}`)
+    }
+  }
+
+  // ── Take Me Home & SOS View ──────────────────────────────────
+  if (view === 'take-me-home') {
+    const hasSession = Boolean(activeSession || isPatientSessionActive())
+    const handleBackFromSOS = () => {
+      if (dashboard) {
+        // If caregiver opened it, return to Caregiver Portal
+        navigateTo('landing')
+      } else if (hasSession) {
+        backToDashboard()
+      } else {
+        backToLanding()
+      }
+    }
+    const backLabel = dashboard
+      ? 'Back to Caregiver Portal'
+      : (hasSession ? 'Back to Dashboard' : 'Back to Home')
+
+    return (
+      <TakeMeHome
+        onBack={handleBackFromSOS}
+        backLabel={backLabel}
+      />
+    )
   }
 
   if (dashboard) {
@@ -1717,6 +1868,21 @@ export default function App() {
         onLogout={() => setDashboard(false)}
         dark={dark}
         onToggleTheme={toggleTheme}
+        onOpenTakeMeHome={() => navigateTo('take-me-home')}
+      />
+    )
+  }
+
+  // ── Games Hub View (Accessible from landing or dashboard) ─────
+  if (view === 'games') {
+    const hasSession = Boolean(activeSession || isPatientSessionActive())
+    return (
+      <GamesHub
+        onBack={hasSession ? backToDashboard : backToLanding}
+        onOpenGame={(gameId) => {
+          navigateTo(`activity:${gameId}`)
+        }}
+        backLabel={hasSession ? 'Back to Dashboard' : 'Back to Home'}
       />
     )
   }
@@ -1727,6 +1893,37 @@ export default function App() {
 
   if (isPatientView) {
     const activityId = view.startsWith('activity:') ? view.slice(9) : null
+    const hasSession = Boolean(activeSession || isPatientSessionActive())
+
+    if (activityId === 'memory-match') {
+      return (
+        <MemoryMatch
+          onBack={hasSession ? backToDashboard : backToLanding}
+          onBackToGames={() => navigateTo('games')}
+          backLabel={hasSession ? 'Back to Dashboard' : 'Back to Home'}
+        />
+      )
+    }
+
+    if (activityId === 'word-recall' || activityId === 'memory-activity') {
+      return (
+        <WordRecall
+          onBack={hasSession ? backToDashboard : backToLanding}
+          onBackToGames={() => navigateTo('games')}
+          backLabel={hasSession ? 'Back to Dashboard' : 'Back to Home'}
+        />
+      )
+    }
+
+    if (activityId === 'different-object') {
+      return (
+        <DifferentObject
+          onBack={hasSession ? backToDashboard : backToLanding}
+          onBackToGames={() => navigateTo('games')}
+          backLabel={hasSession ? 'Back to Dashboard' : 'Back to Home'}
+        />
+      )
+    }
 
     return (
       <PatientSessionProvider initialSession={activeSession ?? {}}>
@@ -1736,6 +1933,7 @@ export default function App() {
               onHome={backToLanding}
               onNavigateActivity={navigateActivity}
               onLogout={handlePatientLogout}
+              onOpenTakeMeHome={() => navigateTo('take-me-home')}
             />
           ) : (
             <ActivityPlaceholder
@@ -1756,9 +1954,12 @@ export default function App() {
       <main id="main-content" tabIndex={-1}>
         <Hero openLogin={handleOpenLogin} />
         <Challenges />
-        <Features />
+        <Features
+          onOpenGames={() => navigateTo('games')}
+          onOpenTakeMeHome={() => navigateTo('take-me-home')}
+        />
         <HowItWorks />
-        <SafeHome />
+        <SafeHome onOpenTakeMeHome={() => navigateTo('take-me-home')} />
         <Benefits />
         <Future />
         <CTA openLogin={handleOpenLogin} />
