@@ -1,0 +1,601 @@
+/* TakeMeHome & SOS Styles — elderly-friendly design matching MindCare NER */
+
+.tmh-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #f5fcfb 0%, #edfbfb 45%, #f7fbfb 100%);
+  color: #173944;
+}
+
+.tmh-topbar {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #e2eded;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.tmh-topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  flex-wrap: wrap;
+}
+
+.tmh-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 18px;
+  min-height: 48px;
+  border-radius: 12px;
+}
+
+.tmh-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tmh-title h1 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 24px;
+  margin: 0;
+  color: #173944;
+  letter-spacing: -0.02em;
+}
+
+.tmh-title p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #55747a;
+}
+
+.tmh-main {
+  padding: 32px 0 70px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ─── Card Container ─────────────────────────────────────────────── */
+.tmh-card {
+  background: #ffffff;
+  border: 2px solid #d4ede8;
+  border-radius: 28px;
+  padding: 36px 28px;
+  box-shadow: 0 12px 36px rgba(21, 127, 122, 0.09);
+  margin-bottom: 24px;
+}
+
+/* ─── Navigation Mode ────────────────────────────────────────────── */
+.tmh-direction-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tmh-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #edf8f6;
+  color: #157f7a;
+  border: 1px solid #c2e8e2;
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.tmh-compass-circle {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e6f6f3 0%, #d2f0eb 100%);
+  border: 6px solid #157f7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(21, 127, 122, 0.2);
+}
+
+.tmh-compass-arrow {
+  color: #157f7a;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tmh-heading-details {
+  margin-bottom: 32px;
+}
+
+.tmh-distance-text {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #173944;
+  margin: 0 0 6px;
+}
+
+.tmh-direction-text {
+  font-size: 22px;
+  color: #55747a;
+  margin: 0;
+}
+
+.tmh-direction-text strong {
+  color: #157f7a;
+  font-weight: 800;
+}
+
+.tmh-action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.tmh-voice-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 24px;
+  min-height: 56px;
+  border-radius: 16px;
+}
+
+.tmh-sos-trigger-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;
+  padding: 20px 24px;
+  font-size: 22px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  min-height: 68px;
+  box-shadow: 0 10px 25px rgba(211, 47, 47, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tmh-sos-trigger-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(211, 47, 47, 0.45);
+}
+
+.tmh-sos-trigger-btn:focus-visible {
+  outline: 4px solid #b71c1c;
+  outline-offset: 3px;
+}
+
+/* ─── SOS Emergency Screen ───────────────────────────────────────── */
+.tmh-sos-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fdf3f2;
+  border: 2px solid #fad2d2;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.tmh-sos-emblem {
+  font-size: 46px;
+  line-height: 1;
+}
+
+.tmh-sos-banner h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #c62828;
+  margin: 0 0 4px;
+}
+
+.tmh-sos-banner p {
+  margin: 0;
+  font-size: 15px;
+  color: #6a3939;
+}
+
+.tmh-sos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tmh-sos-action-btn {
+  width: 100%;
+  border-radius: 20px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  text-align: left;
+  border: 2px solid transparent;
+  min-height: 76px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tmh-sos-action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.tmh-btn-icon-bubble {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tmh-btn-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tmh-btn-copy strong {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.tmh-btn-copy span {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* Caregiver Call Button */
+.tmh-btn-caregiver {
+  background: #157f7a;
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(21, 127, 122, 0.25);
+}
+
+.tmh-btn-caregiver .tmh-btn-icon-bubble {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Emergency 112 Call Button */
+.tmh-btn-emergency {
+  background: #c62828;
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(198, 40, 40, 0.3);
+}
+
+.tmh-btn-emergency .tmh-btn-icon-bubble {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Return to Directions */
+.tmh-btn-return {
+  background: #f4faf9;
+  border-color: #ccece6;
+  color: #173944;
+}
+
+.tmh-btn-return .tmh-btn-icon-bubble {
+  background: #e0f4f1;
+  color: #157f7a;
+}
+
+/* ─── Location Box in SOS ────────────────────────────────────────── */
+.tmh-location-panel {
+  background: #fbfdfd;
+  border: 2px solid #d4ede8;
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tmh-loc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #157f7a;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.tmh-coords-text {
+  font-size: 15px;
+  color: #173944;
+  margin: 0 0 6px;
+}
+
+.tmh-dist-text {
+  font-size: 16px;
+  color: #2d5560;
+  margin: 0;
+}
+
+.tmh-loc-error {
+  color: #b71c1c;
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+
+.tmh-share-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.tmh-location-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tmh-loc-btn {
+  flex: 1;
+  min-height: 48px;
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+}
+
+/* ─── Safety Notice ──────────────────────────────────────────────── */
+.tmh-safety-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #edf4f5;
+  border: 1px solid #d8e6e8;
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #55747a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.tmh-safety-notice p {
+  margin: 0;
+}
+
+/* ─── Confirmation Modal ─────────────────────────────────────────── */
+.tmh-confirm-modal {
+  max-width: 480px;
+  text-align: center;
+  padding: 34px 28px;
+}
+
+.tmh-confirm-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.tmh-confirm-icon.teal {
+  background: #e0f4f1;
+  color: #157f7a;
+}
+
+.tmh-confirm-icon.red {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.tmh-confirm-icon.amber {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.tmh-confirm-modal h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 26px;
+  margin: 0 0 10px;
+}
+
+.tmh-confirm-desc {
+  font-size: 16px;
+  color: #55747a;
+  margin: 0 0 16px;
+}
+
+.tmh-confirm-phone-pill {
+  font-size: 24px;
+  font-weight: 800;
+  color: #173944;
+  background: #edf8f6;
+  border: 2px solid #b2dfdb;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 26px;
+}
+
+.tmh-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.tmh-confirm-btn {
+  flex: 1;
+  min-height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+}
+
+.tmh-btn-call-emergency {
+  background: #c62828;
+  color: #ffffff;
+}
+
+.tmh-btn-call-emergency:hover {
+  background: #b71c1c;
+}
+
+.tmh-confirm-full-btn {
+  width: 100%;
+  min-height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 14px;
+}
+
+/* ─── Dark Theme Styles ─────────────────────────────────────────── */
+.dark-theme .tmh-page {
+  background: #0d1920;
+  color: #e8f2f2;
+}
+
+.dark-theme .tmh-topbar {
+  background: rgba(13, 25, 32, 0.94);
+  border-color: #243d46;
+}
+
+.dark-theme .tmh-title h1 {
+  color: #eef9f8;
+}
+
+.dark-theme .tmh-title p {
+  color: #a9c1c5;
+}
+
+.dark-theme .tmh-card {
+  background: #172830;
+  border-color: #29424b;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+.dark-theme .tmh-card-badge {
+  background: #1a353c;
+  color: #8be0d5;
+  border-color: #2f565e;
+}
+
+.dark-theme .tmh-compass-circle {
+  background: #152932;
+  border-color: #3aa69c;
+}
+
+.dark-theme .tmh-compass-arrow {
+  color: #7ee0d4;
+}
+
+.dark-theme .tmh-distance-text {
+  color: #eef9f8;
+}
+
+.dark-theme .tmh-direction-text {
+  color: #a9c1c5;
+}
+
+.dark-theme .tmh-direction-text strong {
+  color: #7ee0d4;
+}
+
+.dark-theme .tmh-sos-banner {
+  background: #311818;
+  border-color: #632d2d;
+}
+
+.dark-theme .tmh-sos-banner h2 {
+  color: #ff8a80;
+}
+
+.dark-theme .tmh-sos-banner p {
+  color: #d1b1b1;
+}
+
+.dark-theme .tmh-btn-return {
+  background: #1e353f;
+  border-color: #355d69;
+  color: #eef9f8;
+}
+
+.dark-theme .tmh-btn-return .tmh-btn-icon-bubble {
+  background: #13242c;
+  color: #7ee0d4;
+}
+
+.dark-theme .tmh-location-panel {
+  background: #13242c;
+  border-color: #28434d;
+}
+
+.dark-theme .tmh-coords-text {
+  color: #eef9f8;
+}
+
+.dark-theme .tmh-dist-text {
+  color: #a9c1c5;
+}
+
+.dark-theme .tmh-safety-notice {
+  background: #142229;
+  border-color: #253942;
+  color: #8faab0;
+}
+
+.dark-theme .tmh-confirm-phone-pill {
+  background: #12252c;
+  border-color: #2b545f;
+  color: #7ee0d4;
+}
+
+@media (max-width: 600px) {
+  .tmh-card {
+    padding: 26px 18px;
+  }
+  .tmh-distance-text {
+    font-size: 32px;
+  }
+  .tmh-direction-text {
+    font-size: 18px;
+  }
+  .tmh-sos-action-btn {
+    padding: 14px 16px;
+    gap: 14px;
+  }
+  .tmh-btn-copy strong {
+    font-size: 16px;
+  }
+}
