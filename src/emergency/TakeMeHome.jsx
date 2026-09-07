@@ -11,9 +11,14 @@ import {
   calculateCompassBearing,
   formatTelLink
 } from './emergencyContactService'
+import { useTranslation } from '../i18n/index.js'
+import { speakInLanguage } from '../i18n/voiceDetection.js'
 import './TakeMeHome.css'
 
-export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
+export default function TakeMeHome({ onBack, backLabel }) {
+  const { t, language } = useTranslation()
+  const displayBackLabel = backLabel || t('common.back', 'Back')
+
   // Saved locations and contact configuration
   const [homeLocation, setHomeLocation] = useState(getHomeLocation)
   const [caregiverContact, setCaregiverContact] = useState(getEmergencyContact)
@@ -86,14 +91,9 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
 
   // Voice Read-Aloud Direction
   const speakDirection = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-      const distText = distanceKm !== null ? `${distanceKm} kilometers away` : 'a short distance away'
-      const text = `Take me home. Walk toward ${compassDirection}. Home is ${distText}.`
-      const utterance = new SpeechSynthesisUtterance(text)
-      utterance.rate = 0.85
-      window.speechSynthesis.speak(utterance)
-    }
+    const distText = distanceKm !== null ? `${distanceKm} km` : ''
+    const text = `${t('safety.title', 'Take Me Home')}. ${t('safety.walkToward', 'Walk toward')} ${compassDirection}. ${distText}.`
+    speakInLanguage(text, language, { rate: 0.85 })
   }
 
   // Handle Initiating Call Confirmation
@@ -101,7 +101,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
     if (!caregiverContact || !caregiverContact.phone) {
       setCallConfirmation({
         type: 'missing_caregiver',
-        title: 'No Caregiver Phone Configured',
+        title: t('sos.missingCaregiver', 'No Caregiver Phone Configured'),
         message: 'A caregiver contact number has not been set yet. Please ask your caregiver to set their number in settings.',
       })
       return
@@ -109,7 +109,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
 
     setCallConfirmation({
       type: 'caregiver',
-      title: 'Call your caregiver?',
+      title: `${t('sos.confirmMessage', 'Are you sure you want to call')} ${caregiverContact.name}?`,
       name: `${caregiverContact.name} (${caregiverContact.relationship})`,
       phone: caregiverContact.phone,
     })
@@ -118,7 +118,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
   const promptCallEmergency = () => {
     setCallConfirmation({
       type: 'emergency',
-      title: `Call Emergency Services (${emergencyConfig.emergencyNumber})?`,
+      title: `${t('sos.confirmMessage', 'Are you sure you want to call')} ${emergencyConfig.emergencyNumber}?`,
       name: emergencyConfig.label,
       phone: emergencyConfig.emergencyNumber,
     })
@@ -180,10 +180,10 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
             type="button"
             className="btn btn-secondary tmh-back-btn"
             onClick={onBack}
-            aria-label={backLabel}
+            aria-label={displayBackLabel}
           >
             <Home size={20} aria-hidden="true" />
-            <span>{backLabel}</span>
+            <span>{displayBackLabel}</span>
           </button>
 
           <div className="tmh-title">
@@ -191,8 +191,8 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
               <Navigation size={22} />
             </span>
             <div>
-              <h1>Take Me Home &amp; SOS</h1>
-              <p>Safe navigation and emergency assistance</p>
+              <h1>{t('safety.title', 'Take Me Home')} &amp; {t('sos.sosButton', '🆘 SOS')}</h1>
+              <p>{t('landing.safeHomeDesc', 'Safe navigation and emergency assistance')}</p>
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
             <section className="tmh-card tmh-direction-card" aria-label="Home direction guidance">
               <div className="tmh-card-badge">
                 <Home size={16} aria-hidden="true" />
-                <span>Navigating to: {homeLocation.address}</span>
+                <span>{t('safety.destination', 'Destination')}: {homeLocation.address}</span>
               </div>
 
               {/* Big Compass Arrow */}
@@ -227,10 +227,10 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
               {/* Distance and Compass Heading */}
               <div className="tmh-heading-details">
                 <h2 className="tmh-distance-text">
-                  {distanceKm !== null ? `${distanceKm} km` : '1.2 km'} away
+                  {distanceKm !== null ? `${distanceKm} km` : '1.2 km'} {t('safety.distanceAway', 'away from home')}
                 </h2>
                 <p className="tmh-direction-text">
-                  Walk toward <strong>{compassDirection}</strong>
+                  {t('safety.walkToward', 'Walk toward')} <strong>{compassDirection}</strong>
                 </p>
               </div>
 
@@ -240,10 +240,10 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                   type="button"
                   className="btn btn-secondary tmh-voice-btn"
                   onClick={speakDirection}
-                  aria-label="Listen to spoken directions"
+                  aria-label={t('safety.readDirection', 'Read Direction Aloud')}
                 >
                   <Volume2 size={24} aria-hidden="true" />
-                  <span>Read Direction Aloud</span>
+                  <span>{t('safety.readDirection', 'Read Direction Aloud')}</span>
                 </button>
 
                 <button
@@ -253,7 +253,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                   aria-label="Open emergency assistance and SOS options"
                 >
                   <AlertTriangle size={32} aria-hidden="true" />
-                  <span>🆘 SOS / NEED HELP</span>
+                  <span>{t('sos.sosButton', '🆘 SOS')} / {t('sos.emergencyTitle', 'NEED HELP')}</span>
                 </button>
               </div>
             </section>
@@ -269,8 +269,8 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
               <div className="tmh-sos-banner">
                 <span className="tmh-sos-emblem" aria-hidden="true">🆘</span>
                 <div>
-                  <h2>NEED HELP?</h2>
-                  <p>Choose an emergency action below. Help is always nearby.</p>
+                  <h2>{t('sos.emergencyTitle', 'Emergency Assistance')}</h2>
+                  <p>{t('sos.emergencySubtitle', 'If you need help, tap one of the options below.')}</p>
                 </div>
               </div>
 
@@ -287,7 +287,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     <Phone size={32} />
                   </div>
                   <div className="tmh-btn-copy">
-                    <strong>CALL CAREGIVER</strong>
+                    <strong>{t('sos.callCaregiver', 'CALL CAREGIVER')}</strong>
                     <span>
                       {caregiverContact?.phone
                         ? `${caregiverContact.name} (${caregiverContact.phone})`
@@ -307,7 +307,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     <ShieldAlert size={32} />
                   </div>
                   <div className="tmh-btn-copy">
-                    <strong>CALL EMERGENCY — {emergencyConfig.emergencyNumber}</strong>
+                    <strong>{t('sos.callEmergency', 'CALL EMERGENCY (112)')} — {emergencyConfig.emergencyNumber}</strong>
                     <span>National Emergency / Police (India)</span>
                   </div>
                 </button>
@@ -317,7 +317,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                   <div className="tmh-location-info">
                     <div className="tmh-loc-header">
                       <MapPin size={22} className="tmh-loc-icon" aria-hidden="true" />
-                      <strong>YOUR CURRENT LOCATION</strong>
+                      <strong>{t('sos.myLocation', 'YOUR CURRENT LOCATION')}</strong>
                     </div>
 
                     <p className="tmh-coords-text">
@@ -325,7 +325,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     </p>
 
                     <p className="tmh-dist-text">
-                      🏠 Distance to Home: <b>{distanceKm !== null ? `${distanceKm} km` : '1.2 km'}</b>
+                      🏠 {t('safety.distance', 'Distance to Home')}: <b>{distanceKm !== null ? `${distanceKm} km` : '1.2 km'}</b>
                     </p>
 
                     {currentCoords.error && (
@@ -349,7 +349,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                       aria-label="Refresh your current GPS location"
                     >
                       <RotateCcw size={18} className={loadingGps ? 'spin' : ''} aria-hidden="true" />
-                      <span>{loadingGps ? 'Locating...' : 'Refresh Location'}</span>
+                      <span>{loadingGps ? t('common.loading', 'Locating...') : t('safety.refreshGps', 'Refresh GPS')}</span>
                     </button>
 
                     <button
@@ -359,7 +359,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                       aria-label="Share location with caregiver"
                     >
                       <Share2 size={18} aria-hidden="true" />
-                      <span>Share Location</span>
+                      <span>{t('sos.shareLocation', 'Share My Location')}</span>
                     </button>
                   </div>
                 </div>
@@ -375,7 +375,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     <Home size={30} />
                   </div>
                   <div className="tmh-btn-copy">
-                    <strong>TAKE ME HOME</strong>
+                    <strong>{t('sos.takeMeHome', 'TAKE ME HOME')}</strong>
                     <span>Return to direction guidance</span>
                   </div>
                 </button>
@@ -388,7 +388,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
         <footer className="tmh-safety-notice">
           <HeartHandshake size={18} aria-hidden="true" />
           <p>
-            If you are lost or feel unsafe, stay in a public place and call your caregiver or 112 immediately.
+            {t('sos.safetyNotice', 'If you are lost or feel unsafe, stay in a public place and call your caregiver or 112 immediately.')}
           </p>
         </footer>
       </main>
@@ -413,7 +413,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     onClick={() => setCallConfirmation(null)}
                     autoFocus
                   >
-                    Got it
+                    {t('common.close', 'Got it')}
                   </button>
                 </div>
               </>
@@ -430,7 +430,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                 <h2>{callConfirmation.title}</h2>
 
                 <p className="tmh-confirm-desc">
-                  You are about to call <strong>{callConfirmation.name}</strong> at:
+                  {t('sos.confirmMessage', 'You are about to call')} <strong>{callConfirmation.name}</strong>:
                 </p>
 
                 <div className="tmh-confirm-phone-pill">
@@ -444,7 +444,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     onClick={() => setCallConfirmation(null)}
                   >
                     <X size={20} aria-hidden="true" />
-                    <span>CANCEL</span>
+                    <span>{t('sos.confirmCancel', 'CANCEL')}</span>
                   </button>
 
                   <button
@@ -454,7 +454,7 @@ export default function TakeMeHome({ onBack, backLabel = 'Back to Home' }) {
                     autoFocus
                   >
                     <Phone size={20} aria-hidden="true" />
-                    <span>CALL {callConfirmation.type === 'emergency' ? callConfirmation.phone : 'NOW'}</span>
+                    <span>{t('sos.confirmYes', 'YES, CALL')} {callConfirmation.type === 'emergency' ? callConfirmation.phone : ''}</span>
                   </button>
                 </div>
               </>

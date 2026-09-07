@@ -41,6 +41,7 @@ import {
 } from './reminderService.js'
 import { isReminderForDate } from './reminderModel.js'
 import { ReminderModal } from './ReminderModal.jsx'
+import { useTranslation } from '../i18n'
 
 /**
  * Formats an ISO date string into friendly 12-hour time: "09:00 AM"
@@ -78,6 +79,7 @@ function formatRepeatLabel(repeat) {
 }
 
 export function CaregiverRemindersSection({ patientId = 'MC-2048' }) {
+  const { t } = useTranslation()
   // Reminders and Escalation Alerts state
   const [reminders, setReminders] = useState(() => loadAllReminders())
   const [alerts, setAlerts] = useState(() => loadCaregiverAlerts(patientId))
@@ -342,12 +344,12 @@ export function CaregiverRemindersSection({ patientId = 'MC-2048' }) {
       {/* ── Section Header ───────────────────────────────────────── */}
       <div className="reminders-header-bar">
         <div>
-          <p className="dash-kicker">SMART REMINDERS</p>
+          <p className="dash-kicker">{t('reminders.kicker') || 'SMART REMINDERS'}</p>
           <h2 id="smart-reminders-title" className="reminders-main-title">
-            Smart Reminders
+            {t('reminders.title') || 'Smart Reminders'}
           </h2>
           <p className="reminders-subtitle">
-            Manage helpful reminders for your patient's daily routine.
+            {t('reminders.subtitle') || "Manage helpful reminders for your patient's daily routine."}
           </p>
         </div>
 
@@ -357,11 +359,11 @@ export function CaregiverRemindersSection({ patientId = 'MC-2048' }) {
             type="button"
             className="btn-escalation-config"
             onClick={() => setConfigOpen(true)}
-            title="Configure gentle retry count and escalation interval"
+            title={t('reminders.escalationRules') || "Configure gentle retry count and escalation interval"}
             aria-haspopup="dialog"
           >
             <Settings2 size={16} aria-hidden="true" />
-            <span>Escalation Rules</span>
+            <span>{t('reminders.escalationRules') || 'Escalation Rules'}</span>
           </button>
 
           {/* Manual Sync Trigger (when pending changes exist) */}
@@ -388,7 +390,7 @@ export function CaregiverRemindersSection({ patientId = 'MC-2048' }) {
             aria-haspopup="dialog"
           >
             <Plus size={18} aria-hidden="true" />
-            <span>+ Add Reminder</span>
+            <span>+ {t('reminders.addReminder') || 'Add Reminder'}</span>
           </button>
         </div>
       </div>

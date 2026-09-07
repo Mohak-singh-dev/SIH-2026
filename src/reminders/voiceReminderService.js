@@ -20,16 +20,14 @@
  */
 
 import { REMINDER_TYPES } from './reminderTypes.js'
+import { getSavedLanguageCode, TRANSLATION_CATALOG } from '../i18n/index.js'
+import { detectLanguageVoice } from '../i18n/voiceDetection.js'
 
 export const VOICE_MUTED_STORAGE_KEY = 'mindcare-reminders-voice-muted'
 
 /**
- * Standardized gentle short messages by category as specified:
- * - Hydration: "It's time to have some water."
- * - Medication: "It's time for your scheduled medicine."
- * - Appointment: "You have an appointment today."
- * - Cognitive Activity: "Your brain activity is ready."
- * - Daily Routine: "It's time for your daily routine."
+ * Standardized gentle short messages by category as specified.
+ * Defaults to English, overridden by getVoiceReminderMessage with active language.
  */
 export const CATEGORY_VOICE_MESSAGES = {
   [REMINDER_TYPES.HYDRATION]: "It's time to have some water.",
@@ -54,17 +52,32 @@ export function isSpeechSupported() {
 }
 
 /**
- * Resolves the short spoken message for a reminder.
+ * Resolves the short spoken message for a reminder in the target language.
  * Prioritizes standard dementia-friendly category prompts.
  *
  * @param {Object} reminder
+ * @param {string} [langCode]
  * @returns {string}
  */
-export function getVoiceReminderMessage(reminder) {
+export function getVoiceReminderMessage(reminder, langCode) {
   if (!reminder) return ''
+  const lang = langCode || getSavedLanguageCode()
+  const dict = TRANSLATION_CATALOG[lang] || TRANSLATION_CATALOG['en']
 
-  if (reminder.type && CATEGORY_VOICE_MESSAGES[reminder.type]) {
-    return CATEGORY_VOICE_MESSAGES[reminder.type]
+  if (reminder.type) {
+    const typeMap = {
+      [REMINDER_TYPES.HYDRATION]: dict.reminders?.hydration,
+      [REMINDER_TYPES.MEDICATION]: dict.reminders?.medicine,
+      [REMINDER_TYPES.APPOINTMENT]: dict.reminders?.appointment,
+      [REMINDER_TYPES.COGNITIVE_ACTIVITY]: dict.reminders?.activity,
+      [REMINDER_TYPES.DAILY_ROUTINE]: dict.reminders?.routine,
+    }
+    if (typeMap[reminder.type]) {
+      return typeMap[reminder.type]
+    }
+    if (CATEGORY_VOICE_MESSAGES[reminder.type]) {
+      return CATEGORY_VOICE_MESSAGES[reminder.type]
+    }
   }
 
   // Fallback to title or message
@@ -76,7 +89,7 @@ export function getVoiceReminderMessage(reminder) {
     return reminder.title.trim()
   }
 
-  return "It's time for your scheduled reminder."
+  return dict.reminders?.title || "It's time for your scheduled reminder."
 }
 
 /**
@@ -110,13 +123,14 @@ export function setVoiceMuted(muted) {
       }
       // Broadcast update
       window.dispatchEvent(
-        new CustomEvent('mindcare:voice-mute-changed', { detail: { isMuted } })
+        new CustomEvent('mindcare:voice-mute-change', { detail: { muted: isMuted } })
       )
+      return true
     } catch {
-      // Ignore storage errors
+      return false
     }
   }
-  return isMuted
+  return false
 }
 
 /**
@@ -141,32 +155,20 @@ export function cancelReminderVoice() {
 }
 
 /**
- * Speaks the gentle reminder prompt using the device's Web Speech API.
- *
- * Guarantees:
- * - Checks voiceEnabled flag (skips if false).
- * - Checks mute state (skips unless force === true).
- * - Calming, gentle pitch and unhurried rate (0.85x).
- * - Never repeatedly speaks or loops.
- * - Handles browser autoplay restrictions silently.
+ * Speaks a reminder message using native Web Speech Synthesis.
+ * Slower rate (0.85x), gentle volume, single play.
  *
  * @param {Object} reminder
  * @param {Object} [options]
- * @param {boolean} [options.force=false] If true, bypasses mute check (e.g. user manually tapped 'Listen')
- * @param {Function} [options.onStart]
- * @param {Function} [options.onEnd]
- * @param {Function} [options.onError]
- * @returns {{ status: 'spoken'|'disabled'|'muted'|'unsupported'|'empty', message?: string }}
+ * @returns {Promise<{ status: string, message?: string }>}
  */
-export function speakReminderVoice(reminder, options = {}) {
-  if (!reminder) return { status: 'empty' }
-
-  // 1. Check if reminder has voice enabled
-  if (reminder.voiceEnabled === false) {
+export async function speakVoiceReminder(reminder, options = {}) {
+  // 1. Feature flag guard
+  if (!options.force && reminder && reminder.voiceEnabled === false) {
     return { status: 'disabled' }
   }
 
-  // 2. Check if voice assistance is supported
+  // 2. Browser capability check
   if (!isSpeechSupported()) {
     return { status: 'unsupported' }
   }
@@ -176,8 +178,16 @@ export function speakReminderVoice(reminder, options = {}) {
     return { status: 'muted' }
   }
 
-  const textToSpeak = getVoiceReminderMessage(reminder)
+  const activeLang = options.lang || getSavedLanguageCode()
+  const textToSpeak = getVoiceReminderMessage(reminder, activeLang)
   if (!textToSpeak) return { status: 'empty' }
+
+  // Check if voice is available for target language
+  const voiceCheck = detectLanguageVoice(activeLang)
+  if (!voiceCheck.hasVoice || !voiceCheck.voice) {
+    // Graceful degradation: do not throw or crash
+    return { status: 'no_voice_for_language', notice: voiceCheck.notice, message: textToSpeak }
+  }
 
   try {
     // Cancel any previous speech to avoid overlapping
@@ -188,24 +198,11 @@ export function speakReminderVoice(reminder, options = {}) {
 
     // Dementia-friendly speech parameters:
     // Slower pace (0.85x) to aid cognitive processing and reduce anxiety
-    utterance.rate = 0.85
+    utterance.rate = options.rate || 0.85
     utterance.pitch = 1.0
     utterance.volume = 0.95
-    utterance.lang = 'en-US'
-
-    // Choose gentle, clear voice if available
-    try {
-      const voices = window.speechSynthesis.getVoices()
-      if (Array.isArray(voices) && voices.length > 0) {
-        // Prefer pleasant natural English voice
-        const preferred = voices.find(
-          v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Jenny'))
-        ) || voices.find(v => v.lang.startsWith('en'))
-        if (preferred) {
-          utterance.voice = preferred
-        }
-      }
-    } catch {}
+    utterance.voice = voiceCheck.voice
+    utterance.lang = voiceCheck.voice.lang || 'en-US'
 
     if (typeof options.onStart === 'function') {
       utterance.onstart = options.onStart
@@ -232,3 +229,6 @@ export function speakReminderVoice(reminder, options = {}) {
     return { status: 'unsupported' }
   }
 }
+
+/** Backwards-compatibility export */
+export const speakReminderVoice = speakVoiceReminder

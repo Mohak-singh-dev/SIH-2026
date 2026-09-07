@@ -1,4 +1,5 @@
 import { Home, Brain, NotebookPen, ArrowRight, Sparkles, Layers, ShieldCheck } from 'lucide-react'
+import { useTranslation } from '../../i18n'
 import './GamesHub.css'
 
 const GAMES = [
@@ -38,6 +39,7 @@ const GAMES = [
 ]
 
 export default function GamesHub({ onBack, onOpenGame, backLabel = 'Back to Home' }) {
+  const { t } = useTranslation()
   return (
     <div className="games-hub-page">
       <header className="gh-topbar">
@@ -56,8 +58,8 @@ export default function GamesHub({ onBack, onOpenGame, backLabel = 'Back to Home
               <Brain size={24} />
             </span>
             <div>
-              <h1 className="gh-header-title">Cognitive Games</h1>
-              <p className="gh-header-sub">Thoughtful activities for memory, focus, and daily engagement</p>
+              <h1 className="gh-header-title">{t('games.catalogTitle') || 'Cognitive Games'}</h1>
+              <p className="gh-header-sub">{t('games.catalogSubtitle') || 'Thoughtful activities for memory, focus, and daily engagement'}</p>
             </div>
           </div>
         </div>
@@ -122,7 +124,7 @@ export default function GamesHub({ onBack, onOpenGame, backLabel = 'Back to Home
                     onClick={() => onOpenGame(id)}
                     aria-label={`Play ${title}`}
                   >
-                    <span>Play Game</span>
+                    <span>{t('games.playGame') || 'Play Game'}</span>
                     <ArrowRight size={20} aria-hidden="true" />
                   </button>
                 </div>
