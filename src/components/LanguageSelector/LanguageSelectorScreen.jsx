@@ -53,7 +53,7 @@ export default function LanguageSelectorScreen({ onBack, onSave, backLabel }) {
               <Globe size={24} />
             </span>
             <div>
-              <span className="lss-brand-tag">MINDCARE NER</span>
+              <span className="lss-brand-tag">SMRITI CARE</span>
               <span className="lss-brand-sub">{t('common.language', 'Language')}</span>
             </div>
           </div>

@@ -38,6 +38,7 @@ import LanguageSelectorScreen from './components/LanguageSelector/LanguageSelect
 
 /* ─── Landing Page Data ─────────────────────────────────────────── */
 const nav = ['Home', 'Features', 'How It Works', 'About', 'Contact']
+const withBrandName = (text) => text.replaceAll('MindCare NER', 'Smriti Care').replaceAll('MindCare', 'Smriti Care')
 const challenges = [
   ['Memory loss', Brain, 'Remembering familiar people, places and moments.'],
   ['Confusion & anxiety', Sparkles, 'Feeling disoriented during everyday routines.'],
@@ -58,9 +59,8 @@ const features = [
   ['Multilingual Support', Languages, 'Choose from English, Hindi and 8 North-Eastern languages.'],
 ]
 const future = [
-  ['Memory Games', Gamepad2], ['Cognitive Analytics', Activity], ['AI Voice Assistant', Mic],
-  ['Medicine Reminders', Pill], ['Caregiver Dashboard', UsersRound], ['Offline Safe Navigation', MapPin],
-  ['Offline Sync', WifiOff], ['Regional Languages', Languages], ['Emergency Alerts', BellRing],
+  ['Cognitive Analytics', Activity], ['AI Voice Assistant', Mic], ['AI MRI Scan', Stethoscope],
+  ['Offline Safe Navigation', MapPin], ['Offline Sync', WifiOff], ['Emergency Alerts', BellRing],
 ]
 /* ─── Shared Primitives ─────────────────────────────────────────── */
 function Button({ children, kind = 'primary', className = '', ...props }) {
@@ -77,7 +77,7 @@ function Logo({ onClick }) {
         <Brain size={22} />
         <Heart size={10} fill="currentColor" />
       </span>
-      <span>MindCare <b>NER</b></span>
+      <span>Smriti Care</span>
     </a>
   )
 }
@@ -339,7 +339,7 @@ function HowItWorks() {
   return (
     <section id="how-it-works" className="section how-section">
       <div className="container">
-        <SectionTitle eyebrow={t('landing.simpleFromStart') || "Simple from the start"} title={t('landing.howMindCareWorks') || "How MindCare works"} />
+        <SectionTitle eyebrow={t('landing.simpleFromStart') || "Simple from the start"} title={withBrandName(t('landing.howMindCareWorks') || "How Smriti Care works")} />
         <div className="steps">
           {steps.map(([no, title, text], i) => (
             <div className="step" key={no}>
@@ -436,7 +436,7 @@ function Future() {
     <section className="section" id="about">
       <div className="container future-wrap">
         <div>
-          <SectionTitle center={false} eyebrow={t('landing.growingEveryNeed') || "Growing with every need"} title={t('landing.platformNext') || "A platform designed for what comes next."} text={t('landing.platformNextDesc') || "MindCare NER begins with a thoughtful foundation and grows alongside the people it serves."} />
+          <SectionTitle center={false} eyebrow={t('landing.growingEveryNeed') || "Growing with every need"} title={t('landing.platformNext') || "A platform designed for what comes next."} text={withBrandName(t('landing.platformNextDesc') || "Smriti Care begins with a thoughtful foundation and grows alongside the people it serves.")} />
           <Button kind="secondary">{t('landing.learnMore') || 'Learn more'} <ArrowRight size={17} /></Button>
         </div>
         <div className="future-grid">
@@ -458,7 +458,7 @@ function CTA({ openLogin }) {
     <section id="contact" className="cta">
       <div className="container cta-inner">
         <div>
-          <span className="eyebrow">MindCare NER</span>
+          <span className="eyebrow">Smriti Care</span>
           <h2>{t('landing.ctaTitle') || 'Building a safer and healthier future for elderly care.'}</h2>
           <p>{t('landing.ctaDesc') || 'Technology can help elders stay mentally engaged, connected, independent and safe.'}</p>
         </div>
@@ -492,8 +492,8 @@ function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <p>{t('landing.copyright') || '© 2026 MindCare NER. Designed with care for North East India.'}</p>
-        <p>{t('landing.medicalNotice') || 'MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.'}</p>
+        <p>{withBrandName(t('landing.copyright') || '© 2026 Smriti Care. Designed with care for North East India.')}</p>
+        <p>{withBrandName(t('landing.medicalNotice') || 'Smriti Care supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.')}</p>
       </div>
     </footer>
   )
@@ -705,7 +705,7 @@ function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
         <h2 id="login-title">{isPatient ? (t('auth.patientLogin') || 'Patient Login') : (t('auth.caregiverLogin') || `${type} login`)}</h2>
         <p>{isPatient
           ? (t('auth.patientExperienceDesc') || 'Enter the patient experience directly. No username, password or OTP is required in this kiosk prototype.')
-          : (type === 'Caregiver' ? (t('auth.caregiverLoginDesc') || 'Sign in to view your patient’s care overview.') : `The ${type.toLowerCase()} portal is being prepared for the next phase of MindCare NER.`)}
+          : (type === 'Caregiver' ? (t('auth.caregiverLoginDesc') || 'Sign in to view your patient’s care overview.') : `The ${type.toLowerCase()} portal is being prepared for the next phase of Smriti Care.`)}
         </p>
         {type === 'Caregiver' && (
           <form onSubmit={submit} className="login-form">
@@ -752,13 +752,13 @@ function PatientHeader({ onHome, onHelp, onVoice, onLanguage }) {
     <header className="pd-header" role="banner">
       <div className="pd-header-inner">
         {/* Brand — purely visual/informational, no link needed on patient screen */}
-        <div className="pd-brand" aria-label="MindCare NER application">
+        <div className="pd-brand" aria-label="Smriti Care application">
           <span className="pd-brand-mark" aria-hidden="true">
             <Brain size={28} />
             <Heart size={12} fill="currentColor" />
           </span>
           <span className="pd-brand-name">
-            MindCare <strong>NER</strong>
+            Smriti Care
           </span>
         </div>
 
