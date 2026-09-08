@@ -33,7 +33,10 @@
     "tryAgain": "पुनः प्रयास करें",
     "error": "त्रुटि",
     "success": "सफलता",
-    "comingSoon": "जल्द आ रहा है"
+    "comingSoon": "जल्द आ रहा है",
+    "completed": "पूर्ण",
+    "goBack": "वापस जाएं",
+    "skipToMain": "मुख्य सामग्री पर जाएं"
   },
   "nav": {
     "home": "होम",
@@ -201,7 +204,8 @@
     "ctaDesc": "तकनीक बुजुर्गों को मानसिक रूप से सक्रिय, स्वतंत्र और सुरक्षित रख सकती है।",
     "footerTagline": "एआई-संचालित संज्ञानात्मक देखभाल और सुरक्षा मंच।",
     "copyright": "2026 MindCare NER. पूर्वोत्तर भारत के लिए सप्रेम निर्मित।",
-    "medicalNotice": "माइंडकेयर संज्ञानात्मक सहभागिता का समर्थन करता है। यह डॉक्टरी निदान या आपातकालीन सेवाओं का विकल्प नहीं है।"
+    "medicalNotice": "माइंडकेयर संज्ञानात्मक सहभागिता का समर्थन करता है। यह डॉक्टरी निदान या आपातकालीन सेवाओं का विकल्प नहीं है।",
+    "safeHomeDesc": "सुरक्षित नेविगेशन और आपातकालीन सहायता"
   },
   "auth": {
     "patientLoginTitle": "मरीज प्रवेश",
@@ -214,7 +218,20 @@
     "enterPatientExperience": "मरीज अनुभव में प्रवेश करें",
     "demoCredentials": "नमूना विवरण",
     "demoEmail": "ईमेल: singhmohak360@gmail.com",
-    "demoPassword": "पासवर्ड: Hello@123"
+    "demoPassword": "पासवर्ड: Hello@123",
+    "patientLogin": "मरीज़ प्रवेश (Patient Login)",
+    "patientLoginDesc": "अपनी देखभाल यात्रा जारी रखने के लिए प्रवेश करें।",
+    "caregiverLogin": "देखभालकर्ता प्रवेश (Caregiver Login)",
+    "caregiverLoginDesc": "अपने मरीज़ की देखभाल का विवरण देखने के लिए प्रवेश करें।",
+    "patientExperienceDesc": "सीधे मरीज़ अनुभव में प्रवेश करें। इस कियोस्क में किसी पासवर्ड या ओटीपी की आवश्यकता नहीं है।",
+    "emailAddress": "ईमेल पता",
+    "password": "पासवर्ड",
+    "enterPassword": "पासवर्ड दर्ज करें",
+    "signIn": "साइन इन करें",
+    "invalidCredentials": "कृपया नीचे दिए गए नमूना क्रेडेंशियल्स दर्ज करें।",
+    "sampleCredentials": "नमूना क्रेडेंशियल्स",
+    "continueExploring": "खोज जारी रखें",
+    "pinIncorrect": "वह पिन सही नहीं है। कृपया पुनः प्रयास करें।"
   },
   "patient": {
     "greetingMorning": "शुभ प्रभात",
@@ -254,7 +271,31 @@
     "musicMemoriesTitle": "संगीत और यादें",
     "musicMemoriesSub": "सुनें और याद करें",
     "talkRecallTitle": "बातचीत और यादें",
-    "talkRecallSub": "परिचित बातों पर चर्चा करें"
+    "talkRecallSub": "परिचित बातों पर चर्चा करें",
+    "areYouSure": "क्या आप सुनिश्चित हैं?",
+    "leaveDashboardConfirm": "क्या आप मरीज़ डैशबोर्ड से बाहर जाना चाहते हैं?",
+    "chooseActivity": "आइए आज के लिए एक गतिविधि चुनें।",
+    "todaysProgress": "आज की प्रगति",
+    "activitiesCompleted": "गतिविधियां पूर्ण",
+    "activityProgress": "आज की गतिविधि प्रगति",
+    "greatJob": "बहुत बढ़िया! आप निरंतर प्रगति कर रहे हैं।",
+    "tryGentleExercise": "आइए मिलकर एक सरल स्मरण गतिविधि करें।",
+    "brainGames": "मस्तिष्क के खेल",
+    "memoryActivity": "स्मृति गतिविधि",
+    "musicMemories": "संगीत और यादें",
+    "talkRecall": "बातचीत और स्मरण",
+    "trainMemory": "स्मृति अभ्यास",
+    "practiceRemembering": "याद रखने का अभ्यास",
+    "listenRemember": "सुनें और याद रखें",
+    "talkFamiliar": "जानी-पहचानी बातें करें",
+    "tapToOpen": "खोलने के लिए टैप करें।",
+    "safetyAssistance": "सुरक्षा और सहायता",
+    "takeMeHomeSOS": "घर ले चलें और आपातकालीन एसओएस",
+    "takeMeHomeDesc": "घर की दिशा में कम्पास नेविगेशन और आपातकालीन संपर्क सहायता।",
+    "logoutDevice": "लॉग आउट करें। इससे मरीज़ सत्र समाप्त हो जाएगा।",
+    "caregiverAuthorization": "देखभालकर्ता प्रमाणीकरण",
+    "caregiverPin": "देखभालकर्ता पिन",
+    "enterPinToEnd": "सत्र समाप्त करने के लिए देखभालकर्ता पिन दर्ज करें।"
   },
   "caregiver": {
     "portalTitle": "देखभालकर्ता पोर्टल",
@@ -315,7 +356,31 @@
     "emergencyHelpline": "राष्ट्रीय आपातकालीन हेल्पलाइन",
     "emergencyHelplineDesc": "पुलिस और एम्बुलेंस के लिए राष्ट्रीय आपातकालीन नंबर",
     "editHelpline": "हेल्पलाइन बदलें",
-    "previewTakeMeHome": "टेक मी होम और SOS पूर्वावलोकन खोलें"
+    "previewTakeMeHome": "टेक मी होम और SOS पूर्वावलोकन खोलें",
+    "portal": "देखभालकर्ता पोर्टल",
+    "greeting": "शुभ प्रभात, मोहक।",
+    "patientStatus": "श्री रमेश दास का आज का विवरण यहाँ है।",
+    "lastUpdated": "आज 9:42 पूर्वाह्न पर अपडेट किया गया",
+    "yearsOld": "वर्ष",
+    "moderate": "मध्यम",
+    "needsSupport": "नियमित सहायता की आवश्यकता है",
+    "viewProfile": "पूरी प्रोफ़ाइल देखें",
+    "statCognitive": "संज्ञानात्मक स्कोर",
+    "statNextAppt": "अगला अपॉइंटमेंट",
+    "todaysRoutine": "आज की दिनचर्या",
+    "taskMorningMed": "सुबह की दवा",
+    "taskMemoryGame": "स्मृति मिलान गतिविधि",
+    "taskAfternoonMed": "दोपहर की दवा",
+    "taskEveningWalk": "शाम की सैर",
+    "upcoming": "आगामी",
+    "improvementCompared": "पिछले सप्ताह की तुलना में संज्ञानात्मक सक्रियता में।",
+    "preferences": "मरीज़ की प्राथमिकताएं",
+    "languageUpdatedNotice": "मरीज़ की भाषा अपडेट कर दी गई है:",
+    "todaysNote": "आज का नोट",
+    "insightText": "पारिवारिक फ़ोटो गतिविधि के दौरान रमेश जी ने उत्कृष्ट पहचान दिखाई और आवाज़ के निर्देशों पर अच्छी प्रतिक्रिया दी।",
+    "mood": "मनोदशा",
+    "calmEngaged": "शांत और सक्रिय",
+    "role": "देखभालकर्ता"
   },
   "games": {
     "catalogTitle": "संज्ञानात्मक खेल",
@@ -356,7 +421,8 @@
     "wordRecallTitle": "शब्द स्मरण एवं स्मृति",
     "wordRecallSubtitle": "शब्द पहचान और याददाश्त",
     "wordRecallDesc": "रोजमर्रा के शब्दों को पढ़ें, हल्का विराम लें, और देखें कि आपको कौन से शब्द याद रहते हैं।",
-    "wordRecallInstruction": "एक सरल और सुखद स्मृति अभ्यास"
+    "wordRecallInstruction": "एक सरल और सुखद स्मृति अभ्यास",
+    "memoryMatch": "स्मृति मिलान (Memory Match)"
   },
   "safety": {
     "title": "मुझे घर ले चलें",
@@ -369,7 +435,24 @@
     "gpsAccurate": "सटीक जीपीएस स्थान",
     "refreshGps": "जीपीएस ताज़ा करें",
     "readDirection": "दिशा बोलकर बताएं",
-    "offlineGpsNotice": "100% ऑफ़लाइन जीपीएस नेविगेशन — किसी इंटरनेट की आवश्यकता नहीं।"
+    "offlineGpsNotice": "100% ऑफ़लाइन जीपीएस नेविगेशन — किसी इंटरनेट की आवश्यकता नहीं।",
+    "safetyResponse": "सुरक्षा एवं सहायता",
+    "emergencySettings": "आपातकालीन एवं सुरक्षा सेटिंग्स",
+    "emergencySettingsDesc": "यह सेटिंग्स टेक मी होम कम्पास और एसओएस स्क्रीन द्वारा उपयोग की जाती हैं। सभी डेटा सुरक्षित ऑफ़लाइन रहता है।",
+    "primaryCaregiver": "प्राथमिक देखभालकर्ता",
+    "directContactPatient": "मरीज़ एसओएस कॉल के लिए सीधा संपर्क",
+    "familyPhone": "पारिवारिक फोन",
+    "editContact": "संपर्क संपादित करें",
+    "remove": "हटाएं",
+    "noCaregiverPhone": "कोई देखभालकर्ता फ़ोन नंबर सेट नहीं है।",
+    "addEmergencyContact": "आपातकालीन संपर्क जोड़ें",
+    "homeLocation": "घर का स्थान",
+    "targetTakeMeHome": "घर वापसी के लिए लक्षित स्थान",
+    "coordinates": "निर्देशांक",
+    "changeHomeLocation": "घर का स्थान बदलें",
+    "emergencyHelpline": "आपातकालीन सेवा हेल्पलाइन",
+    "nationalResponseNumber": "राष्ट्रीय आपातकालीन सहायता नंबर",
+    "configureNumber": "नंबर कॉन्फ़िगर करें"
   },
   "sos": {
     "sosButton": "🆘 SOS",
@@ -397,7 +480,10 @@
     "dismiss": "हो गया",
     "snooze": "10 मिनट बाद याद दिलाएं",
     "addReminder": "अनुस्मारक जोड़ें",
-    "smartRemindersSection": "स्मार्ट अनुस्मारक और दिनचर्या"
+    "smartRemindersSection": "स्मार्ट अनुस्मारक और दिनचर्या",
+    "kicker": "स्मार्ट अनुस्मारक (Smart Reminders)",
+    "subtitle": "मरीज़ की दैनिक दिनचर्या के लिए उपयोगी अनुस्मारक प्रबंधित करें।",
+    "escalationRules": "अलर्ट नियम"
   },
   "voice": {
     "available": "आपकी भाषा में आवाज़ मार्गदर्शन उपलब्ध है।",
