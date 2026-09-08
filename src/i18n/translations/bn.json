@@ -33,7 +33,10 @@
     "tryAgain": "আবার চেষ্টা করুন",
     "error": "ত্রুটি",
     "success": "সফল",
-    "comingSoon": "শীঘ্রই আসছে"
+    "comingSoon": "শীঘ্রই আসছে",
+    "completed": "সম্পন্ন",
+    "goBack": "ফিরে যান",
+    "skipToMain": "মূল বিষয়ে যান"
   },
   "nav": {
     "home": "হোম",
@@ -201,7 +204,8 @@
     "ctaDesc": "Technology can help elders stay mentally engaged, connected, independent and safe.",
     "footerTagline": "AI-powered cognitive care and safety platform.",
     "copyright": "2026 MindCare NER. Designed with care for North East India.",
-    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services."
+    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.",
+    "safeHomeDesc": "নিরাপদ দিকনির্দেশ ও জরুরি সহায়তা"
   },
   "auth": {
     "patientLoginTitle": "রোগীর প্রবেশ",
@@ -214,7 +218,20 @@
     "enterPatientExperience": "রোগীর পোর্টালে প্রবেশ করুন",
     "demoCredentials": "নমুনা তথ্য",
     "demoEmail": "ইমেল: singhmohak360@gmail.com",
-    "demoPassword": "পাসওয়ার্ড: Hello@123"
+    "demoPassword": "পাসওয়ার্ড: Hello@123",
+    "patientLogin": "রোগী লগইন (Patient Login)",
+    "patientLoginDesc": "আপনার যত্ন যাত্রা চালিয়ে যেতে প্রবেশ করুন।",
+    "caregiverLogin": "সেবাকারী লগইন (Caregiver Login)",
+    "caregiverLoginDesc": "রোগীর যত্নের বিবরণ দেখতে প্রবেশ করুন।",
+    "patientExperienceDesc": "সরাসরি রোগীর ইন্টারফেসে প্রবেশ করুন। কোনো পাসওয়ার্ড বা ওটিপির প্রয়োজন নেই।",
+    "emailAddress": "ইমেল ঠিকানা",
+    "password": "পাসওয়ার্ড",
+    "enterPassword": "পাসওয়ার্ড লিখুন",
+    "signIn": "সাইন ইন করুন",
+    "invalidCredentials": "অনুগ্রহ করে নিচে দেওয়া নমুনা তথ্য ব্যবহার করুন।",
+    "sampleCredentials": "নমুনা তথ্য",
+    "continueExploring": "অনুসন্ধান চালিয়ে যান",
+    "pinIncorrect": "এই পিনটি সঠিক নয়। অনুগ্রহ করে আবার চেষ্টা করুন।"
   },
   "patient": {
     "greetingMorning": "সুপ্রভাত",
@@ -254,7 +271,31 @@
     "musicMemoriesTitle": "গান ও স্মৃতি",
     "musicMemoriesSub": "শুনুন ও মনে করুন",
     "talkRecallTitle": "কথা বলা ও স্মরণ",
-    "talkRecallSub": "চেনা গল্প বলুন"
+    "talkRecallSub": "চেনা গল্প বলুন",
+    "areYouSure": "আপনি কি নিশ্চিত?",
+    "leaveDashboardConfirm": "আপনি কি রোগীর ড্যাশবোর্ড থেকে বের হতে চান?",
+    "chooseActivity": "আজকের জন্য একটি কাজ বেছে নিন।",
+    "todaysProgress": "আজকের অগ্রগতি",
+    "activitiesCompleted": "টি কাজ সম্পন্ন হয়েছে",
+    "activityProgress": "আজকের কাজের অগ্রগতি",
+    "greatJob": "দারুণ কাজ! আপনি সুন্দরভাবে এগিয়ে চলেছেন।",
+    "tryGentleExercise": "আসুন একসাথে একটি সহজ স্মৃতি চর্চা করি।",
+    "brainGames": "মস্তিষ্কের খেলা",
+    "memoryActivity": "স্মৃতি চর্চা",
+    "musicMemories": "গান ও স্মৃতি",
+    "talkRecall": "কথা ও মনে করা",
+    "trainMemory": "স্মৃতিশক্তি চর্চা",
+    "practiceRemembering": "মনে রাখার অভ্যাস",
+    "listenRemember": "শুনুন ও মনে রাখুন",
+    "talkFamiliar": "পরিচিত বিষয় নিয়ে কথা বলুন",
+    "tapToOpen": "খুলতে স্পর্শ করুন।",
+    "safetyAssistance": "নিরাপত্তা ও সহায়তা",
+    "takeMeHomeSOS": "বাড়ি নিয়ে চলুন ও জরুরি SOS",
+    "takeMeHomeDesc": "বাড়ির দিকে কম্পাস নেভিগেশন এবং সরাসরি জরুরি যোগাযোগ।",
+    "logoutDevice": "লগ আউট করুন। এতে রোগীর সেশন শেষ হবে।",
+    "caregiverAuthorization": "সেবাকারীর অনুমোদন",
+    "caregiverPin": "সেবাকারীর পিন",
+    "enterPinToEnd": "সেশন শেষ করতে সেবাকারীর পিন লিখুন।"
   },
   "caregiver": {
     "portalTitle": "সেবাদানকারী পোর্টাল",
@@ -315,7 +356,31 @@
     "emergencyHelpline": "জাতীয় জরুরি নম্বর",
     "emergencyHelplineDesc": "পুলিশ ও অ্যাম্বুলেন্সের জাতীয় হেল্পলাইন",
     "editHelpline": "হেল্পলাইন বদলান",
-    "previewTakeMeHome": "বাড়ি ফেরা ও SOS স্ক্রিন দেখুন"
+    "previewTakeMeHome": "বাড়ি ফেরা ও SOS স্ক্রিন দেখুন",
+    "portal": "সেবাকারী পোর্টাল",
+    "greeting": "শুভ সকাল, মোহক।",
+    "patientStatus": "আজ শ্রী রমেশ দাসের অবস্থা এইরকম।",
+    "lastUpdated": "আজ সকাল ৯:৪২ এ আপডেট করা হয়েছে",
+    "yearsOld": "বছর",
+    "moderate": "মাঝারি",
+    "needsSupport": "নিয়মিত সহায়তা প্রয়োজন",
+    "viewProfile": "সম্পূর্ণ প্রোফাইল দেখুন",
+    "statCognitive": "জ্ঞানীয় স্কোর",
+    "statNextAppt": "পরবর্তী সাক্ষাৎ",
+    "todaysRoutine": "আজকের রুটিন",
+    "taskMorningMed": "সকালের ওষুধ",
+    "taskMemoryGame": "স্মৃতি মেলানো খেলা",
+    "taskAfternoonMed": "দুপুরের ওষুধ",
+    "taskEveningWalk": "সন্ধ্যার হাঁটা",
+    "upcoming": "আসন্ন",
+    "improvementCompared": "গত সপ্তাহের তুলনায় মানসিক সক্রিয়তায়।",
+    "preferences": "রোগীর পছন্দসমূহ",
+    "languageUpdatedNotice": "রোগীর ভাষা পরিবর্তিত হয়েছে:",
+    "todaysNote": "আজকের নোট",
+    "insightText": "পারিবারিক ছবি দেখার কার্যকলাপে রমেশ দারুণ সাড়া দিয়েছেন।",
+    "mood": "মেজাজ",
+    "calmEngaged": "শান্ত ও সক্রিয়",
+    "role": "সেবাকারী"
   },
   "games": {
     "catalogTitle": "মানসিক খেলা",
@@ -356,7 +421,8 @@
     "wordRecallTitle": "শব্দ মনে রাখার খেলা",
     "wordRecallSubtitle": "শব্দ চেনা ও মনে রাখা",
     "wordRecallDesc": "পরিচিত শব্দগুলি পড়ুন, একটু অন্য কাজে সময় কাটান এবং পরে মনে করার চেষ্টা করুন।",
-    "wordRecallInstruction": "একটি সহজ ও আনন্দদায়ক স্মৃতি পরীক্ষা"
+    "wordRecallInstruction": "একটি সহজ ও আনন্দদায়ক স্মৃতি পরীক্ষা",
+    "memoryMatch": "স্মৃতি মেলানো (Memory Match)"
   },
   "safety": {
     "title": "আমাকে বাড়ি নিয়ে চলুন",
@@ -369,7 +435,24 @@
     "gpsAccurate": "নির্ভুল জিপিএস অবস্থান",
     "refreshGps": "জিপিএস রিফ্রেশ করুন",
     "readDirection": "দিক পড়ে শোনান",
-    "offlineGpsNotice": "১০০% অফলাইন জিপিএস নেভিগেশন — ইন্টারনেটের দরকার নেই।"
+    "offlineGpsNotice": "১০০% অফলাইন জিপিএস নেভিগেশন — ইন্টারনেটের দরকার নেই।",
+    "safetyResponse": "নিরাপত্তা ও প্রতিক্রিয়া",
+    "emergencySettings": "জরুরি ও নিরাপত্তা সেটিংস",
+    "emergencySettingsDesc": "এই সেটিংসগুলো টেক মি হোম কম্পাস ও SOS স্ক্রিনে ব্যবহৃত হয়। সমস্ত তথ্য অফলাইনে সুরক্ষিত থাকে।",
+    "primaryCaregiver": "প্রধান সেবাকারী",
+    "directContactPatient": "রোগীর SOS কলের সরাসরি যোগাযোগ",
+    "familyPhone": "পারিবারিক ফোন",
+    "editContact": "যোগাযোগ সম্পাদনা",
+    "remove": "মুছে ফেলুন",
+    "noCaregiverPhone": "কোনো সেবাকারীর ফোন নম্বর সংরক্ষিত নেই।",
+    "addEmergencyContact": "জরুরি যোগাযোগ যোগ করুন",
+    "homeLocation": "বাড়ির অবস্থান",
+    "targetTakeMeHome": "বাড়ি ফেরার নির্দিষ্ট স্থান",
+    "coordinates": "স্থানাঙ্ক",
+    "changeHomeLocation": "বাড়ির অবস্থান পরিবর্তন",
+    "emergencyHelpline": "জরুরি সেবা হেল্পলাইন",
+    "nationalResponseNumber": "জাতীয় জরুরি সহায়তা নম্বর",
+    "configureNumber": "নম্বর কনফিগার করুন"
   },
   "sos": {
     "sosButton": "🆘 SOS",
@@ -397,7 +480,10 @@
     "dismiss": "হয়ে গেছে",
     "snooze": "১০ মিনিট পরে মনে করান",
     "addReminder": "অনুস্মারক যোগ করুন",
-    "smartRemindersSection": "স্মার্ট অনুস্মারক ও রুটিন"
+    "smartRemindersSection": "স্মার্ট অনুস্মারক ও রুটিন",
+    "kicker": "স্মার্ট রিমাইন্ডার",
+    "subtitle": "রোগীর প্রতিদিনের রুটিনের জন্য রিমাইন্ডার পরিচালনা করুন।",
+    "escalationRules": "সতর্কতা নিয়ম"
   },
   "voice": {
     "available": "আপনার ভাষায় ভয়েস গাইডেন্স উপলব্ধ।",

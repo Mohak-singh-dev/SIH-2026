@@ -94,10 +94,21 @@ export function saveLanguagePreference(langCode) {
   }
 }
 
+/**
+ * Generate a safe human-readable fallback for missing translation keys.
+ * Technical dotted keys (e.g., "patient.todaysProgress") are never rendered.
+ */
+function createSafeFallback(key, fallback) {
+  if (fallback !== undefined && fallback !== null && typeof fallback === 'string' && fallback.trim() !== '') {
+    return fallback
+  }
+  return 'Not available'
+}
+
 const LanguageContext = createContext({
   language: DEFAULT_LANGUAGE_CODE,
   setLanguage: () => {},
-  t: (key, fallback) => fallback || key,
+  t: (key, fallback) => createSafeFallback(key, fallback),
   languages: SUPPORTED_LANGUAGES,
   currentLanguage: LANGUAGE_MAP[DEFAULT_LANGUAGE_CODE],
 })
@@ -135,7 +146,12 @@ export function LanguageProvider({ children, initialLanguage }) {
     const enResolved = resolveKey(TRANSLATION_CATALOG[DEFAULT_LANGUAGE_CODE], key)
     if (enResolved !== undefined) return enResolved
 
-    return fallback !== undefined ? fallback : key
+    // Log missing key in development mode
+    if (typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production') {
+      console.warn(`[i18n] Missing translation for key: "${key}" in language: "${language}"`)
+    }
+
+    return createSafeFallback(key, fallback)
   }, [language])
 
   const contextValue = useMemo(() => ({

@@ -33,7 +33,10 @@
     "tryAgain": "नायफिन",
     "error": "Error",
     "success": "Success",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "completed": "जोबबाय",
+    "goBack": "गिदिंफिन",
+    "skipToMain": "गाहाय आयदानिफ्राय नाय"
   },
   "nav": {
     "home": "न'",
@@ -201,7 +204,8 @@
     "ctaDesc": "Technology can help elders stay mentally engaged, connected, independent and safe.",
     "footerTagline": "AI-powered cognitive care and safety platform.",
     "copyright": "2026 MindCare NER. Designed with care for North East India.",
-    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services."
+    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.",
+    "safeHomeDesc": "न'सिम रैखाथि लामा आरो गोख्रों मदद"
   },
   "auth": {
     "patientLoginTitle": "Patient Login",
@@ -214,7 +218,20 @@
     "enterPatientExperience": "Enter Patient Experience",
     "demoCredentials": "Sample credentials",
     "demoEmail": "Email: singhmohak360@gmail.com",
-    "demoPassword": "Password: Hello@123"
+    "demoPassword": "Password: Hello@123",
+    "patientLogin": "सानेग्रा हाबनाय (Patient Login)",
+    "patientLoginDesc": "नोंथांनि नायगिनायखौ सालायबाय थानो हाबदो।",
+    "caregiverLogin": "सानेगिरि हाबनाय (Caregiver Login)",
+    "caregiverLoginDesc": "सानेग्रानि राहाफोरखौ नायनो हाबदो।",
+    "patientExperienceDesc": "सानेग्रानि महराव थोंजों हाबदो। जेबो पासवार्ड एबा OTP नाङा।",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "enterPassword": "Password सोनाव",
+    "signIn": "हाबदो",
+    "invalidCredentials": "गाहायाव होनाय sample credentials खौ सोनाव।",
+    "sampleCredentials": "Sample credentials",
+    "continueExploring": "नायबाय था",
+    "pinIncorrect": "बे PIN आ गेबें नङा। अननानै फिन नाजा।"
   },
   "patient": {
     "greetingMorning": "मोजां फुं",
@@ -254,7 +271,31 @@
     "musicMemoriesTitle": "Music & Memories",
     "musicMemoriesSub": "Listen and remember",
     "talkRecallTitle": "Talk & Recall",
-    "talkRecallSub": "Talk about familiar things"
+    "talkRecallSub": "Talk about familiar things",
+    "areYouSure": "नोंथाङा थारैनो नंगौ नामा?",
+    "leaveDashboardConfirm": "नोंथाङा सानेग्रानि dashboard निफ्राय ओंखारनो सानदों नामा?",
+    "chooseActivity": "दिनैनि थाखाय मोनसे हाबा सायख'दो।",
+    "todaysProgress": "दिनैनि जौगानाय",
+    "activitiesCompleted": "हाबा जोबबाय",
+    "activityProgress": "दिनैनि हाबानि जौगानाय",
+    "greatJob": "जोबोद मोजां! नोंथाङा मोजाङै जौगाबाय थादों।",
+    "tryGentleExercise": "फै जों मोनसे गोरलै गोसोखांथि हाबा मावदिनि।",
+    "brainGames": "मेधोनि गेलेनाय",
+    "memoryActivity": "गोसोखांथि हाबा",
+    "musicMemories": "रिंगा आरो गोसोखांथि",
+    "talkRecall": "रायज्लाय आरो गोसोखां",
+    "trainMemory": "गोसोखांथि बांहो",
+    "practiceRemembering": "गोसोआव लाखिनो सोलों",
+    "listenRemember": "खोनासं आरो गोसोआव लाखि",
+    "talkFamiliar": "मिथिसारनाय बाथ्रा रायज्लाय",
+    "tapToOpen": "खेवनो थु।",
+    "safetyAssistance": "रैखाथि आरो मदद",
+    "takeMeHomeSOS": "आंखौ न'आव लांफिन & SOS",
+    "takeMeHomeDesc": "न'नि फारसे compass लामा आरो गोख्रों मदद।",
+    "logoutDevice": "ओंखारदो। बेनि गेजेरजों सानेग्रानि थावनि जोबगोन।",
+    "caregiverAuthorization": "सानेगिरिनि अनसायनाय",
+    "caregiverPin": "सानेगिरिनि PIN",
+    "enterPinToEnd": "हाबा जोबहोनो सानेगिरिनि PIN सोनाव।"
   },
   "caregiver": {
     "portalTitle": "नायदिंफायानि पोर्टल",
@@ -315,7 +356,31 @@
     "emergencyHelpline": "Emergency Helpline",
     "emergencyHelplineDesc": "National emergency number for police and ambulance",
     "editHelpline": "Edit Helpline",
-    "previewTakeMeHome": "Open Take Me Home & SOS View"
+    "previewTakeMeHome": "Open Take Me Home & SOS View",
+    "portal": "सानेगिरि पर्टेल",
+    "greeting": "फुंनि खुलुमबाय, Mohak.",
+    "patientStatus": "श्री रमेश दासनि दिनैनि थासारिया बेबादि।",
+    "lastUpdated": "दिनै फुंनि 9:42 AM आव गोदान खालामबाय",
+    "yearsOld": "बोसोर",
+    "moderate": "गेजेरारि",
+    "needsSupport": "जेब्लाबो मदद नांगौ",
+    "viewProfile": "गासै profile नाय",
+    "statCognitive": "मेधोनि स्कोर",
+    "statNextAppt": "थांगोन सान",
+    "todaysRoutine": "दिनैनि हाबाफारि",
+    "taskMorningMed": "फुंनि मुलि",
+    "taskMemoryGame": "गोसोखांथि गेलेनाय",
+    "taskAfternoonMed": "सानजौफुनि मुलि",
+    "taskEveningWalk": "बेलासे लामाथिं थाबायनाय",
+    "upcoming": "फैगौ",
+    "improvementCompared": "थांनाय सप्ताहनिख्रुइ गोसोखांथियाव मोजां जौगानाय।",
+    "preferences": "सानेग्रानि मोजां मोननाय",
+    "languageUpdatedNotice": "सानेग्रानि राव सोलायबाय:",
+    "todaysNote": "दिनैनि लिरनाय",
+    "insightText": "रमेशा नख'रनि फोटो नायनानै मोजां गोसोखांथि दिन्थिखांदों।",
+    "mood": "गोसोनि थासारि",
+    "calmEngaged": "शान्ति आरो बाहागो लानाय",
+    "role": "सानेगिरि"
   },
   "games": {
     "catalogTitle": "गोसोनि गेलेनायफोर",
@@ -356,7 +421,8 @@
     "wordRecallTitle": "Word Recall & Delayed Memory",
     "wordRecallSubtitle": "Word Recognition & Recall",
     "wordRecallDesc": "Read everyday words, enjoy a gentle distraction activity, and see which words you recall later.",
-    "wordRecallInstruction": "A gentle memory recall exercise"
+    "wordRecallInstruction": "A gentle memory recall exercise",
+    "memoryMatch": "गोसोखांथि गोरोबनाय (Memory Match)"
   },
   "safety": {
     "title": "न'आव लांफिन",
@@ -369,7 +435,24 @@
     "gpsAccurate": "गेबें GPS जायगा",
     "refreshGps": "Refresh GPS",
     "readDirection": "Read Direction Aloud",
-    "offlineGpsNotice": "100% Offline GPS Navigation — No data connection required."
+    "offlineGpsNotice": "100% Offline GPS Navigation — No data connection required.",
+    "safetyResponse": "रैखाथि आरो फिनजाथाय",
+    "emergencySettings": "गोख्रों आरो रैखाथि Settings",
+    "emergencySettingsDesc": "बे Settings खौ Take Me Home compass आरो SOS आव बाहायो। Offline आवबो रैखाथि थायो।",
+    "primaryCaregiver": "गाहाय सानेगिरि",
+    "directContactPatient": "SOS खौलंहरनायनि थोंजों नम्बर",
+    "familyPhone": "नख'रनि phone",
+    "editContact": "Contact दाफिन",
+    "remove": "गार",
+    "noCaregiverPhone": "सानेगिरिनि phone नम्बर गैया।",
+    "addEmergencyContact": "गोख्रों contact सोदेर",
+    "homeLocation": "न'नि जायगा",
+    "targetTakeMeHome": "न'सिम थांफिननायनि जायगा",
+    "coordinates": "Coordinates",
+    "changeHomeLocation": "न'नि जायगा सोलाय",
+    "emergencyHelpline": "Emergency Helpline",
+    "nationalResponseNumber": "हादरनि emergency नम्बर",
+    "configureNumber": "नम्बर थिक खालाम"
   },
   "sos": {
     "sosButton": "🆘 SOS",
@@ -397,7 +480,10 @@
     "dismiss": "जाबाय",
     "snooze": "मिनिट 10 उनाव गोसोखां होफिन",
     "addReminder": "Add Reminder",
-    "smartRemindersSection": "Smart Reminders & Routine"
+    "smartRemindersSection": "Smart Reminders & Routine",
+    "kicker": "स्मार्ट गोसोखांहोग्रा",
+    "subtitle": "सानेग्रानि सानफ्रोमबोनि हाबाफारिनि गोसोखांहोग्रा सामलाय।",
+    "escalationRules": "हुसियार खालामनाय खान्थि"
   },
   "voice": {
     "available": "नोंथांनि रावजों सोरनि हेफाजाब दं।",

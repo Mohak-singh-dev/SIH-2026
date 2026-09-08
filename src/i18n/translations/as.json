@@ -33,7 +33,10 @@
     "tryAgain": "পুনৰ চেষ্টা কৰক",
     "error": "ভুল",
     "success": "সফল",
-    "comingSoon": "শীঘ্ৰেই আহি আছে"
+    "comingSoon": "শীঘ্ৰেই আহি আছে",
+    "completed": "সম্পূৰ্ণ",
+    "goBack": "উভতি যাওক",
+    "skipToMain": "মুখ্য বিষয়বস্তুলৈ যাওক"
   },
   "nav": {
     "home": "মূল পৃষ্ঠা",
@@ -201,7 +204,8 @@
     "ctaDesc": "Technology can help elders stay mentally engaged, connected, independent and safe.",
     "footerTagline": "AI-powered cognitive care and safety platform.",
     "copyright": "2026 MindCare NER. Designed with care for North East India.",
-    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services."
+    "medicalNotice": "MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.",
+    "safeHomeDesc": "সুৰক্ষিত পথ-প্ৰদৰ্শন আৰু জৰুৰীকালীন সাহায্য"
   },
   "auth": {
     "patientLoginTitle": "ৰোগীৰ প্ৰৱেশ",
@@ -214,7 +218,20 @@
     "enterPatientExperience": "ৰোগীৰ অভিজ্ঞতাত প্ৰৱেশ কৰক",
     "demoCredentials": "নমুনা তথ্য",
     "demoEmail": "ইমেইল: singhmohak360@gmail.com",
-    "demoPassword": "পাছৱৰ্ড: Hello@123"
+    "demoPassword": "পাছৱৰ্ড: Hello@123",
+    "patientLogin": "ৰোগী প্ৰৱেশ (Patient Login)",
+    "patientLoginDesc": "আপোনাৰ যত্ন যাত্ৰা অব্যাহত ৰাখিবলৈ প্ৰৱেশ কৰক।",
+    "caregiverLogin": "যত্নকৰ্তা প্ৰৱেশ (Caregiver Login)",
+    "caregiverLoginDesc": "আপোনাৰ ৰোগীৰ যত্ন পৰ্যালোচনা চাবলৈ প্ৰৱেশ কৰক।",
+    "patientExperienceDesc": "পোনপটীয়াকৈ ৰোগীৰ অভিজ্ঞতাত প্ৰৱেশ কৰক। কোনো পাছৱৰ্ড বা অ'টিপি প্ৰয়োজন নাই।",
+    "emailAddress": "ইমেইল ঠিকনা",
+    "password": "পাছৱৰ্ড",
+    "enterPassword": "পাছৱৰ্ড দিয়ক",
+    "signIn": "ছাইন ইন কৰক",
+    "invalidCredentials": "অনুগ্ৰহ কৰি তলত দিয়া যত্নকৰ্তা তথ্যসমূহ দিয়ক।",
+    "sampleCredentials": "নমুনা তথ্য",
+    "continueExploring": "অনুসন্ধান অব্যাহত ৰাখক",
+    "pinIncorrect": "এই পিনটো শুদ্ধ নহয়। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।"
   },
   "patient": {
     "greetingMorning": "শুভ প্ৰভাত",
@@ -254,7 +271,31 @@
     "musicMemoriesTitle": "গীত আৰু পুৰণি স্মৃতি",
     "musicMemoriesSub": "শুনক আৰু মনত পেলাওক",
     "talkRecallTitle": "কথা-বতৰা আৰু স্মৃতি",
-    "talkRecallSub": "চিনাকি কথা পাতক"
+    "talkRecallSub": "চিনাকি কথা পাতক",
+    "areYouSure": "আপুনি নিশ্চিতনে?",
+    "leaveDashboardConfirm": "আপুনি ৰোগী ডেচবৰ্ডৰ পৰা বাহিৰ ওলাব বিচাৰেনে?",
+    "chooseActivity": "আজিৰ বাবে এটা কাৰ্যকলাপ বাছক।",
+    "todaysProgress": "আজিৰ অগ্ৰগতি",
+    "activitiesCompleted": "কাৰ্যকলাপ সম্পূৰ্ণ হৈছে",
+    "activityProgress": "আজিৰ কাৰ্যকলাপৰ অগ্ৰগতি",
+    "greatJob": "বৰ ভাল কাম! আপুনি ধীৰে ধীৰে উন্নতি কৰিছে।",
+    "tryGentleExercise": "আহক আমি একেলগে এটা সহজ স্মৃতি কাৰ্য কৰোঁ।",
+    "brainGames": "মগজুৰ খেল",
+    "memoryActivity": "স্মৃতি কাৰ্যকলাপ",
+    "musicMemories": "সংগীত আৰু স্মৃতি",
+    "talkRecall": "কথা আৰু সোঁৱৰণ",
+    "trainMemory": "স্মৃতি অনুশীলন",
+    "practiceRemembering": "মনত ৰখাৰ অভ্যাস",
+    "listenRemember": "শুনক আৰু মনত ৰাখক",
+    "talkFamiliar": "চিনাকি কথা পাতক",
+    "tapToOpen": "খুলিবলৈ স্পৰ্শ কৰক।",
+    "safetyAssistance": "সুৰক্ষা আৰু সাহায্য",
+    "takeMeHomeSOS": "ঘৰলৈ লৈ যাওক আৰু জৰুৰীকালীন SOS",
+    "takeMeHomeDesc": "ঘৰৰ দিশে কম্পাছ সহায় আৰু জৰুৰীকালীন যোগাযোগ।",
+    "logoutDevice": "লগ আউট কৰক। ইয়াৰ ফলত ৰোগীৰ অধিবেশন সমাপ্ত হ'ব।",
+    "caregiverAuthorization": "যত্নকৰ্তা প্ৰমাণীকৰণ",
+    "caregiverPin": "যত্নকৰ্তা পিন",
+    "enterPinToEnd": "অধিবেশন সমাপ্ত কৰিবলৈ যত্নকৰ্তা পিন দিয়ক।"
   },
   "caregiver": {
     "portalTitle": "যত্নকৰ্তাৰ পৰ্টেল",
@@ -315,7 +356,31 @@
     "emergencyHelpline": "ৰাষ্ট্ৰীয় জৰুৰী নম্বৰ",
     "emergencyHelplineDesc": "আৰক্ষী আৰু এম্বুলেন্সৰ বাবে ৰাষ্ট্ৰীয় নম্বৰ",
     "editHelpline": "নম্বৰ সলনি কৰক",
-    "previewTakeMeHome": "ঘৰলৈ নিয়া আৰু SOS স্ক্ৰীন চাওক"
+    "previewTakeMeHome": "ঘৰলৈ নিয়া আৰু SOS স্ক্ৰীন চাওক",
+    "portal": "যত্নকৰ্তা প'ৰ্টেল",
+    "greeting": "শুভ প্ৰভাত, মোহক।",
+    "patientStatus": "শ্ৰী ৰমেশ দাসৰ আজিৰ স্বাস্থ্যৰ অৱস্থা এনেধৰণৰ।",
+    "lastUpdated": "আজি ৯:৪২ বজাত শেষ আপডেট কৰা হৈছে",
+    "yearsOld": "বছৰ",
+    "moderate": "মধ্যম",
+    "needsSupport": "নিয়মীয়া সাহায্য প্ৰয়োজন",
+    "viewProfile": "সম্পূৰ্ণ প্ৰফাইল চাওক",
+    "statCognitive": "জ্ঞানাত্মক স্ক'ৰ",
+    "statNextAppt": "পৰৱৰ্তী সাক্ষাৎ",
+    "todaysRoutine": "আজিৰ দিনচৰ্যা",
+    "taskMorningMed": "পুৱাৰ ঔষধ",
+    "taskMemoryGame": "স্মৃতি মিলোৱা খেল",
+    "taskAfternoonMed": "দুপৰীয়াৰ ঔষধ",
+    "taskEveningWalk": "গধূলিৰ খোজ কঢ়া",
+    "upcoming": "আহিবলগীয়া",
+    "improvementCompared": "যোৱা সপ্তাহৰ তুলনাত জ্ঞানাত্মক সম্পৃক্ততাত।",
+    "preferences": "ৰোগীৰ পছন্দ",
+    "languageUpdatedNotice": "ৰোগীৰ ভাষা সলনি কৰা হ'ল:",
+    "todaysNote": "আজিৰ টোকা",
+    "insightText": "পৰিয়ালৰ ফটো চিনাক্তকৰণত ৰমেশে সুন্দৰ সঁহাৰি জনায়।",
+    "mood": "মেজাজ",
+    "calmEngaged": "শান্ত আৰু সক্ৰিয়",
+    "role": "যত্নকৰ্তা"
   },
   "games": {
     "catalogTitle": "মানসিক খেল",
@@ -356,7 +421,8 @@
     "wordRecallTitle": "শব্দ সোঁৱৰণ খেল",
     "wordRecallSubtitle": "শব্দ চিনি পোৱা আৰু মনত ৰখা",
     "wordRecallDesc": "দৈনন্দিন চিনাকি শব্দ পঢ়ক, অলপ জিৰণি লওক আৰু পাছত কোনবোৰ মনত থাকিল চাওক।",
-    "wordRecallInstruction": "এক শান্ত আৰু মধুৰ স্মৃতি সোঁৱৰণ খেল"
+    "wordRecallInstruction": "এক শান্ত আৰু মধুৰ স্মৃতি সোঁৱৰণ খেল",
+    "memoryMatch": "স্মৃতি মিলোৱা (Memory Match)"
   },
   "safety": {
     "title": "ঘৰলৈ নিয়া",
@@ -369,7 +435,24 @@
     "gpsAccurate": "সঠিক জিপিএছ অৱস্থান",
     "refreshGps": "জিপিএছ সতেজ কৰক",
     "readDirection": "দিশ মাতি শুনাব",
-    "offlineGpsNotice": "১০০% অফলাইন জিপিএছ — কোনো ইণ্টাৰনেটৰ প্ৰয়োজন নাই।"
+    "offlineGpsNotice": "১০০% অফলাইন জিপিএছ — কোনো ইণ্টাৰনেটৰ প্ৰয়োজন নাই।",
+    "safetyResponse": "সুৰক্ষা আৰু প্ৰতিক্ৰিয়া",
+    "emergencySettings": "জৰুৰীকালীন আৰু সুৰক্ষা ছেটিংছ",
+    "emergencySettingsDesc": "এই ছেটিংছসমূহ টেক মি হোম কম্পাছ আৰু SOS দ্বাৰা ব্যৱহাৰ কৰা হয়। সকলো তথ্য অফলাইনত সুৰক্ষিত থাকে।",
+    "primaryCaregiver": "মুখ্য যত্নকৰ্তা",
+    "directContactPatient": "ৰোগীৰ SOS কলৰ বাবে পোনপটীয়া যোগাযোগ",
+    "familyPhone": "পৰিয়ালৰ ফোন",
+    "editContact": "যোগাযোগ সম্পাদনা কৰক",
+    "remove": "আঁতৰাওক",
+    "noCaregiverPhone": "কোনো যত্নকৰ্তাৰ ফোন নম্বৰ সংৰক্ষণ কৰা নাই।",
+    "addEmergencyContact": "জৰুৰীকালীন যোগাযোগ যোগ কৰক",
+    "homeLocation": "ঘৰৰ অৱস্থান",
+    "targetTakeMeHome": "ঘৰলৈ উভতি যোৱাৰ লক্ষ্যস্থান",
+    "coordinates": "স্থানাংক",
+    "changeHomeLocation": "ঘৰৰ অৱস্থান সলনি কৰক",
+    "emergencyHelpline": "জৰুৰীকালীন সেৱা হেল্পলাইন",
+    "nationalResponseNumber": "ৰাষ্ট্ৰীয় জৰুৰীকালীন সাহায্য নম্বৰ",
+    "configureNumber": "নম্বৰ সংৰূপণ কৰক"
   },
   "sos": {
     "sosButton": "🆘 SOS",
@@ -397,7 +480,10 @@
     "dismiss": "হ'ল",
     "snooze": "১০ মিনিট পাছত মনত পেলাব",
     "addReminder": "সংকেত যোগ কৰক",
-    "smartRemindersSection": "স্মাৰ্ট সংকেত আৰু দিনলিপি"
+    "smartRemindersSection": "স্মাৰ্ট সংকেত আৰু দিনলিপি",
+    "kicker": "স্মাৰ্ট অনুস্মাৰক",
+    "subtitle": "ৰোগীৰ দৈনিক দিনচৰ্যাৰ বাবে অনুস্মাৰক পৰিচালনা কৰক।",
+    "escalationRules": "সতৰ্কতা নিয়ম"
   },
   "voice": {
     "available": "আপোনাৰ ভাষাত মাতৰ নিৰ্দেশনা উপলব্ধ।",

@@ -33,7 +33,10 @@
     "tryAgain": "Try Again",
     "error": "Error",
     "success": "Success",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "completed": "Completed",
+    "goBack": "Go Back",
+    "skipToMain": "Skip to main content"
   },
   "nav": {
     "home": "Home",
@@ -201,7 +204,8 @@
     "ctaDesc": "Technology can help elders stay mentally engaged, connected, independent and safe.",
     "footerTagline": "AI-powered cognitive care and safety platform.",
     "copyright": "2026 Smriti Care. Designed with care for North East India.",
-    "medicalNotice": "Smriti Care supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services."
+    "medicalNotice": "Smriti Care supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.",
+    "safeHomeDesc": "Safe navigation and emergency assistance"
   },
   "auth": {
     "patientLoginTitle": "Patient Login",
@@ -214,7 +218,20 @@
     "enterPatientExperience": "Enter Patient Experience",
     "demoCredentials": "Sample credentials",
     "demoEmail": "Email: singhmohak360@gmail.com",
-    "demoPassword": "Password: Hello@123"
+    "demoPassword": "Password: Hello@123",
+    "patientLogin": "Patient Login",
+    "patientLoginDesc": "Sign in to continue your care journey.",
+    "caregiverLogin": "Caregiver Login",
+    "caregiverLoginDesc": "Sign in to view your patient’s care overview.",
+    "patientExperienceDesc": "Enter the patient experience directly. No username, password or OTP is required in this kiosk prototype.",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "enterPassword": "Enter password",
+    "signIn": "Sign in",
+    "invalidCredentials": "Please enter the sample caregiver credentials shown below.",
+    "sampleCredentials": "Sample credentials",
+    "continueExploring": "Continue exploring",
+    "pinIncorrect": "That PIN isn't correct. Please try again."
   },
   "patient": {
     "greetingMorning": "Good Morning",
@@ -254,7 +271,31 @@
     "musicMemoriesTitle": "Music & Memories",
     "musicMemoriesSub": "Listen and remember",
     "talkRecallTitle": "Talk & Recall",
-    "talkRecallSub": "Talk about familiar things"
+    "talkRecallSub": "Talk about familiar things",
+    "areYouSure": "Are you sure?",
+    "leaveDashboardConfirm": "Do you want to leave the patient dashboard?",
+    "chooseActivity": "Let's choose an activity for today.",
+    "todaysProgress": "Today's Progress",
+    "activitiesCompleted": "activities completed",
+    "activityProgress": "Today's activity progress",
+    "greatJob": "Great job today! You're making gentle, steady progress.",
+    "tryGentleExercise": "Let's try a gentle memory exercise together.",
+    "brainGames": "Brain Games",
+    "memoryActivity": "Memory Activity",
+    "musicMemories": "Music & Memories",
+    "talkRecall": "Talk & Recall",
+    "trainMemory": "Train your memory",
+    "practiceRemembering": "Practice remembering",
+    "listenRemember": "Listen and remember",
+    "talkFamiliar": "Talk about familiar things",
+    "tapToOpen": "Tap to open.",
+    "safetyAssistance": "Safety & Assistance",
+    "takeMeHomeSOS": "Take Me Home & SOS",
+    "takeMeHomeDesc": "Compass navigation toward home and direct emergency contact support.",
+    "logoutDevice": "Log Out. Leaving this device will end the patient session.",
+    "caregiverAuthorization": "Caregiver Authorization",
+    "caregiverPin": "Caregiver PIN",
+    "enterPinToEnd": "Enter caregiver PIN to end this session."
   },
   "caregiver": {
     "portalTitle": "Caregiver portal",
@@ -315,7 +356,31 @@
     "emergencyHelpline": "Emergency Helpline",
     "emergencyHelplineDesc": "National emergency number for police and ambulance",
     "editHelpline": "Edit Helpline",
-    "previewTakeMeHome": "Open Take Me Home & SOS View"
+    "previewTakeMeHome": "Open Take Me Home & SOS View",
+    "portal": "Caregiver portal",
+    "greeting": "Good morning, Mohak.",
+    "patientStatus": "Here’s how Mr. Ramesh Das is doing today.",
+    "lastUpdated": "Last updated today, 9:42 AM",
+    "yearsOld": "years",
+    "moderate": "Moderate",
+    "needsSupport": "Needs regular support",
+    "viewProfile": "View full profile",
+    "statCognitive": "Cognitive score",
+    "statNextAppt": "Next appointment",
+    "todaysRoutine": "TODAY’S ROUTINE",
+    "taskMorningMed": "Morning medicine",
+    "taskMemoryGame": "Memory matching activity",
+    "taskAfternoonMed": "Afternoon medicine",
+    "taskEveningWalk": "Evening walk",
+    "upcoming": "Upcoming",
+    "improvementCompared": "in cognitive engagement compared with last week.",
+    "preferences": "PATIENT PREFERENCES",
+    "languageUpdatedNotice": "Patient language updated to",
+    "todaysNote": "Today’s note",
+    "insightText": "Ramesh showed strong recognition during the family-photo activity and responded well to voice prompts.",
+    "mood": "Mood",
+    "calmEngaged": "Calm & engaged",
+    "role": "Caregiver"
   },
   "games": {
     "catalogTitle": "Cognitive Games",
@@ -356,7 +421,8 @@
     "wordRecallTitle": "Word Recall & Delayed Memory",
     "wordRecallSubtitle": "Word Recognition & Recall",
     "wordRecallDesc": "Read everyday words, enjoy a gentle distraction activity, and see which words you recall later.",
-    "wordRecallInstruction": "A gentle memory recall exercise"
+    "wordRecallInstruction": "A gentle memory recall exercise",
+    "memoryMatch": "Memory Match"
   },
   "safety": {
     "title": "Take Me Home",
@@ -369,7 +435,24 @@
     "gpsAccurate": "Accurate GPS Location",
     "refreshGps": "Refresh GPS",
     "readDirection": "Read Direction Aloud",
-    "offlineGpsNotice": "100% Offline GPS Navigation — No data connection required."
+    "offlineGpsNotice": "100% Offline GPS Navigation — No data connection required.",
+    "safetyResponse": "SAFETY & RESPONSE",
+    "emergencySettings": "Emergency & Safety Settings",
+    "emergencySettingsDesc": "These settings are used by the patient's Take Me Home compass and SOS emergency screen. All data is stored securely in local offline storage.",
+    "primaryCaregiver": "Primary Caregiver",
+    "directContactPatient": "Direct contact for patient SOS calls",
+    "familyPhone": "Family phone",
+    "editContact": "Edit Contact",
+    "remove": "Remove",
+    "noCaregiverPhone": "No caregiver phone number configured.",
+    "addEmergencyContact": "Add Emergency Contact",
+    "homeLocation": "Home Location",
+    "targetTakeMeHome": "Target location for Take Me Home guidance",
+    "coordinates": "Coordinates",
+    "changeHomeLocation": "Change Home Location",
+    "emergencyHelpline": "Emergency Services Helpline",
+    "nationalResponseNumber": "National emergency response number",
+    "configureNumber": "Configure Number"
   },
   "sos": {
     "sosButton": "🆘 SOS",
@@ -397,7 +480,10 @@
     "dismiss": "Done",
     "snooze": "Remind Me in 10 Min",
     "addReminder": "Add Reminder",
-    "smartRemindersSection": "Smart Reminders & Routine"
+    "smartRemindersSection": "Smart Reminders & Routine",
+    "kicker": "SMART REMINDERS",
+    "subtitle": "Manage helpful reminders for your patient's daily routine.",
+    "escalationRules": "Escalation Rules"
   },
   "voice": {
     "available": "Voice guidance is available in your language.",
