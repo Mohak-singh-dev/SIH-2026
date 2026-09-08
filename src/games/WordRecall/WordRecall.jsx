@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Home, RotateCcw, ArrowRight, NotebookPen, Clock3, Sparkles, Star, ArrowLeft } from 'lucide-react'
+import { useTranslation } from '../../i18n'
+import { getWordBankForLanguage } from './wordBanks.js'
 import './WordRecall.css'
 
 // Level 1 (Easy) word pool — everyday familiar items for elderly users.
@@ -106,6 +108,7 @@ function encouragement() {
 }
 
 export default function WordRecall({ onBack, onBackToGames, backLabel = 'Back to Home' }) {
+  const { currentLanguage, t } = useTranslation()
   const [level, setLevel] = useState(1)
 
   // step: levelSelect | intro | learning | immediate | distraction | delayed | result
@@ -129,20 +132,22 @@ export default function WordRecall({ onBack, onBackToGames, backLabel = 'Back to
 
   const setupGame = useCallback((levelId) => {
     const cfg = LEVELS[levelId]
+    const langBank = getWordBankForLanguage(currentLanguage?.code || 'en')
     let wordObjs
     let distractorPool
     let distractorCount
 
     if (cfg.mode === 'random') {
-      wordObjs = shuffle(WORD_BANK).slice(0, cfg.count)
+      const activePool = langBank?.pool || WORD_BANK
+      wordObjs = shuffle(activePool).slice(0, cfg.count)
       const chosen = wordObjs.map((w) => w.word)
-      const leftover = WORD_BANK.map((w) => w.word).filter((w) => !chosen.includes(w))
-      distractorPool = [...leftover, ...DISTRACTOR_BANK]
+      const leftover = activePool.map((w) => w.word).filter((w) => !chosen.includes(w))
+      distractorPool = [...leftover, ...(langBank?.distractors || DISTRACTOR_BANK)]
       distractorCount = cfg.distractorCount
     } else {
-      wordObjs = cfg.words
-      distractorPool = cfg.distractorWords
-      distractorCount = cfg.distractorWords.length
+      wordObjs = langBank?.levels?.[levelId] || cfg.words
+      distractorPool = langBank?.distractors || cfg.distractorWords
+      distractorCount = (langBank?.distractors || cfg.distractorWords).length
     }
 
     const targets = wordObjs.map((w) => w.word)
@@ -156,7 +161,7 @@ export default function WordRecall({ onBack, onBackToGames, backLabel = 'Back to
     setDistractionIndex(0)
     setSecondsLeft(cfg.learningSeconds)
     return targets
-  }, [])
+  }, [currentLanguage])
 
   const handleSelectLevel = (levelId) => {
     setLevel(levelId)
@@ -278,10 +283,10 @@ export default function WordRecall({ onBack, onBackToGames, backLabel = 'Back to
               <NotebookPen size={22} />
             </span>
             <div>
-              <h1>Word Recall & Memory</h1>
+              <h1>{t('games.wordRecallTitle') || 'Word Recall & Memory'}</h1>
               <p>
                 {step === 'levelSelect'
-                  ? 'A gentle memory recall exercise'
+                  ? (t('games.wordRecallInstruction') || 'A gentle memory recall exercise')
                   : `Memory recall activity — ${LEVELS[level].label}`}
               </p>
             </div>

@@ -3,6 +3,8 @@ import {
   Home, RotateCcw, ArrowRight, Trophy, Timer, Target, Sparkles,
   ArrowLeft, Volume2, HelpCircle, CheckCircle2, AlertCircle, Eye
 } from 'lucide-react'
+import { useTranslation } from '../../i18n'
+import { speakInLanguage } from '../../i18n/voiceDetection'
 import './DifferentObject.css'
 
 // Comprehensive category pools with everyday recognizable items for elderly users
@@ -196,6 +198,7 @@ function formatTime(totalSeconds) {
 }
 
 export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Back to Home' }) {
+  const { currentLanguage, t } = useTranslation()
   const [level, setLevel] = useState(1)
   const [questions, setQuestions] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -263,12 +266,9 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
 
   // Optional Voice Instruction button
   const speakInstruction = () => {
+    const text = t('games.findDifferentInstruction') || 'Find the object that is different from the others.'
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-      const text = 'Find the object that is different from the others.'
-      const utterance = new SpeechSynthesisUtterance(text)
-      utterance.rate = 0.85 // Gentle, slower tempo for elderly comprehension
-      window.speechSynthesis.speak(utterance)
+      speakInLanguage(text, currentLanguage?.code || 'en', { rate: 0.85 })
     }
   }
 
@@ -378,8 +378,8 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
               <Sparkles size={22} />
             </span>
             <div>
-              <h1>Find the Different Object</h1>
-              <p>A gentle category recognition game</p>
+              <h1>{t('games.findDifferentTitle') || 'Find the Different Object'}</h1>
+              <p>{t('games.findDifferentInstruction') || 'A gentle category recognition game'}</p>
             </div>
           </div>
         </div>
@@ -408,7 +408,7 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
             onClick={handleRestart}
           >
             <RotateCcw size={18} aria-hidden="true" />
-            <span>Restart</span>
+            <span>{t('games.retry') || 'Restart'}</span>
           </button>
         </section>
 
@@ -424,14 +424,14 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
           <div className="diff-stat-card">
             <span className="icon-bubble teal" aria-hidden="true"><Trophy size={20} /></span>
             <div>
-              <small>Correct</small>
+              <small>{t('games.score') || 'Correct'}</small>
               <strong>{score}</strong>
             </div>
           </div>
           <div className="diff-stat-card">
             <span className="icon-bubble amber" aria-hidden="true"><Timer size={20} /></span>
             <div>
-              <small>Time</small>
+              <small>{t('games.timeTaken') || 'Time'}</small>
               <strong>{formatTime(seconds)}</strong>
             </div>
           </div>
@@ -440,17 +440,17 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
         {/* Instruction and Voice Read-Aloud */}
         <section className="diff-instruction-box">
           <p className="diff-instruction-text">
-            Find the object that is <strong>different</strong> from the others.
+            {t('games.findDifferentInstruction') || 'Find the object that is different from the others.'}
           </p>
           <button
             type="button"
             className="diff-voice-btn"
             onClick={speakInstruction}
-            aria-label="Read instructions out loud"
-            title="Read instructions out loud"
+            aria-label={t('games.readAloud') || 'Read Aloud'}
+            title={t('games.readAloud') || 'Read Aloud'}
           >
             <Volume2 size={20} aria-hidden="true" />
-            <span>Read Aloud</span>
+            <span>{t('games.readAloud') || 'Read Aloud'}</span>
           </button>
         </section>
 
@@ -504,7 +504,7 @@ export default function DifferentObject({ onBack, onBackToGames, backLabel = 'Ba
               onClick={handleNextQuestion}
               autoFocus
             >
-              <span>{currentIndex + 1 < questions.length ? 'Next Question' : 'View Results'}</span>
+              <span>{currentIndex + 1 < questions.length ? (t('games.next') || 'Next Question') : (t('games.completed') || 'View Results')}</span>
               <ArrowRight size={22} aria-hidden="true" />
             </button>
           </div>

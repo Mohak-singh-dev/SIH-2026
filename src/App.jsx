@@ -32,6 +32,8 @@ import { authenticatePatient, validateCaregiverPin } from './config/authConfig'
 import { CaregiverRemindersSection } from './reminders/CaregiverRemindersSection'
 import { PatientReminderModal } from './reminders/PatientReminderModal'
 import { usePatientDueReminder } from './reminders/usePatientDueReminder'
+import { LanguageProvider, useTranslation, SUPPORTED_LANGUAGES } from './i18n'
+import LanguageSelectorScreen from './components/LanguageSelector/LanguageSelectorScreen'
 
 
 /* ─── Landing Page Data ─────────────────────────────────────────── */
@@ -53,7 +55,7 @@ const features = [
   ['Caregiver Monitoring', Activity, 'A clear view of activity, mood and cognitive engagement.'],
   ['Safe Return Home', MapPin, 'Offline-assisted guidance to a saved home location.'],
   ['Offline Support', WifiOff, 'Important assistance remains accessible with limited connectivity.'],
-  ['Multilingual Support', Languages, 'English, Hindi and future North-Eastern languages.'],
+  ['Multilingual Support', Languages, 'Choose from English, Hindi and 8 North-Eastern languages.'],
 ]
 const future = [
   ['Memory Games', Gamepad2], ['Cognitive Analytics', Activity], ['AI Voice Assistant', Mic],
@@ -96,26 +98,85 @@ function ThemeToggle({ dark, onToggle }) {
 }
 
 /* ─── Landing Page Components ───────────────────────────────────── */
-function Navbar({ openLogin, dark, onToggleTheme }) {
+function Navbar({ openLogin, dark, onToggleTheme, onOpenLanguageSelector }) {
   const [open, setOpen] = useState(false)
+  const { currentLanguage, t } = useTranslation()
+
+  const navItems = [
+    { key: 'home', label: t('nav.home') || 'Home', href: '#home' },
+    { key: 'features', label: t('nav.features') || 'Features', href: '#features' },
+    { key: 'howItWorks', label: t('nav.howItWorks') || 'How It Works', href: '#how-it-works' },
+    { key: 'about', label: t('nav.about') || 'About', href: '#about' },
+    { key: 'contact', label: t('nav.contact') || 'Contact', href: '#contact' },
+  ]
+
   return (
     <header className="navbar">
-      <a className="skip-to-main" href="#main-content">Skip to main content</a>
+      <a className="skip-to-main" href="#main-content">{t('common.skipToMain') || 'Skip to main content'}</a>
       <div className="container nav-inner">
         <Logo />
         <nav className={open ? 'nav-links show' : 'nav-links'}>
-          {nav.map(x => (
-            <a key={x} href={`#${x.toLowerCase().replaceAll(' ', '-')}`} onClick={() => setOpen(false)}>{x}</a>
+          {navItems.map(item => (
+            <a key={item.key} href={item.href} onClick={() => setOpen(false)}>{item.label}</a>
           ))}
           <div className="mobile-actions">
-            <Button kind="secondary" onClick={() => openLogin('Patient')}>Patient Login</Button>
-            <Button onClick={() => openLogin('Caregiver')}>Caregiver Login</Button>
+            <button
+              type="button"
+              className="lang-nav-btn mobile-lang-btn"
+              onClick={() => { setOpen(false); onOpenLanguageSelector?.(); }}
+              aria-label={`Select language. Currently ${currentLanguage?.name || 'English'}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                minHeight: 48,
+                padding: '10px 16px',
+                borderRadius: 12,
+                border: '1.5px solid #157f7a',
+                background: '#f0fdfa',
+                color: '#0f766e',
+                fontWeight: 700,
+                fontSize: 15,
+                width: '100%',
+                cursor: 'pointer'
+              }}
+            >
+              <Languages size={20} />
+              <span>🌐 {currentLanguage?.name || 'English'} ({currentLanguage?.nativeName || 'English'})</span>
+            </button>
+            <Button kind="secondary" onClick={() => openLogin('Patient')}>{t('nav.patientLogin') || 'Patient Login'}</Button>
+            <Button onClick={() => openLogin('Caregiver')}>{t('nav.caregiverLogin') || 'Caregiver Login'}</Button>
           </div>
         </nav>
         <div className="desktop-actions">
           <ThemeToggle dark={dark} onToggle={onToggleTheme} />
-          <button className="text-button" onClick={() => openLogin('Patient')}>Patient Login</button>
-          <Button onClick={() => openLogin('Caregiver')}>Caregiver Login</Button>
+          <button
+            type="button"
+            className="lang-nav-btn"
+            onClick={onOpenLanguageSelector}
+            aria-label={`Language selector. Currently ${currentLanguage?.name || 'English'}`}
+            title="Choose language"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              minHeight: 48,
+              padding: '8px 16px',
+              borderRadius: 12,
+              border: '1.5px solid #157f7a',
+              background: '#f0fdfa',
+              color: '#0f766e',
+              fontWeight: 700,
+              fontSize: 14,
+              cursor: 'pointer'
+            }}
+          >
+            <Languages size={18} />
+            <span>🌐 {currentLanguage?.nativeName || 'English'}</span>
+          </button>
+          <button className="text-button" onClick={() => openLogin('Patient')}>{t('nav.patientLogin') || 'Patient Login'}</button>
+          <Button onClick={() => openLogin('Caregiver')}>{t('nav.caregiverLogin') || 'Caregiver Login'}</Button>
         </div>
         <button className="menu" aria-label="Toggle navigation" onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
@@ -125,22 +186,23 @@ function Navbar({ openLogin, dark, onToggleTheme }) {
   )
 }
 function Hero({ openLogin }) {
+  const { t } = useTranslation()
   return (
     <section id="home" className="hero">
       <div className="hero-orb orb-one" />
       <div className="hero-orb orb-two" />
       <div className="container hero-grid">
         <div className="hero-copy">
-          <div className="eyebrow"><span className="pulse" /> Made with care for North East India</div>
-          <h1>Empowering elderly minds with <em>AI-powered</em> cognitive care.</h1>
-          <p>An intelligent cognitive assistance and safety platform designed to support elderly individuals with dementia through personalized brain activities, daily assistance and caregiver support.</p>
+          <div className="eyebrow"><span className="pulse" /> {t('landing.eyebrow') || 'Made with care for North East India'}</div>
+          <h1>{t('landing.heroTitle') || 'Empowering elderly minds with AI-powered cognitive care.'}</h1>
+          <p>{t('landing.heroSubtitle') || 'An intelligent cognitive assistance and safety platform designed to support elderly individuals with dementia through personalized brain activities, daily assistance and caregiver support.'}</p>
           <div className="hero-actions">
-            <Button onClick={() => openLogin('Caregiver')}>Get started <ArrowRight size={18} /></Button>
-            <Button kind="secondary" onClick={() => document.querySelector('#features').scrollIntoView({ behavior: 'smooth' })}>Explore features</Button>
+            <Button onClick={() => openLogin('Caregiver')}>{t('landing.getStarted') || 'Get started'} <ArrowRight size={18} /></Button>
+            <Button kind="secondary" onClick={() => document.querySelector('#features').scrollIntoView({ behavior: 'smooth' })}>{t('landing.exploreFeatures') || 'Explore features'}</Button>
           </div>
           <div className="trust-row">
-            <span><ShieldCheck /> Safe &amp; accessible</span>
-            <span><HeartHandshake /> Built for care</span>
+            <span><ShieldCheck /> {t('landing.safeAccessible') || 'Safe & accessible'}</span>
+            <span><HeartHandshake /> {t('landing.builtForCare') || 'Built for care'}</span>
           </div>
         </div>
         <div className="hero-art">
@@ -148,11 +210,11 @@ function Hero({ openLogin }) {
           <img src={heroImage} alt="An elderly woman using a tablet with a caregiver and AI cognitive support" />
           <div className="float-card activity-card">
             <span className="icon-bubble violet"><Activity size={18} /></span>
-            <div><small>Today's activity</small><strong>Great progress!</strong></div>
+            <div><small>{t('landing.todaysActivity') || "Today's activity"}</small><strong>{t('landing.greatProgress') || 'Great progress!'}</strong></div>
           </div>
           <div className="float-card safe-card">
             <span className="icon-bubble coral"><Heart size={18} fill="currentColor" /></span>
-            <div><small>Care circle</small><strong>Connected</strong></div>
+            <div><small>{t('landing.careCircle') || 'Care circle'}</small><strong>{t('landing.connected') || 'Connected'}</strong></div>
           </div>
         </div>
       </div>
@@ -169,12 +231,23 @@ function SectionTitle({ eyebrow, title, text, center = true }) {
   )
 }
 function Challenges() {
+  const { t } = useTranslation()
+  const challengeList = [
+    [t('landing.memoryLoss') || 'Memory loss', Brain, t('landing.memoryLossDesc') || 'Remembering familiar people, places and moments.'],
+    [t('landing.confusionAnxiety') || 'Confusion & anxiety', Sparkles, t('landing.confusionAnxietyDesc') || 'Feeling disoriented during everyday routines.'],
+    [t('landing.medicineSchedules') || 'Medicine schedules', Pill, t('landing.medicineSchedulesDesc') || 'Keeping track of important medications.'],
+    [t('landing.dailyActivities') || 'Daily activities', Clock3, t('landing.dailyActivitiesDesc') || 'Managing appointments and simple tasks.'],
+    [t('landing.caregiverVisibility') || 'Caregiver visibility', UsersRound, t('landing.caregiverVisibilityDesc') || 'Staying connected from a distance.'],
+    [t('landing.limitedConnectivity') || 'Limited connectivity', WifiOff, t('landing.limitedConnectivityDesc') || 'Accessing support in remote locations.'],
+    [t('landing.findingWayHome') || 'Finding the way home', Route, t('landing.findingWayHomeDesc') || 'Getting safely back to a saved location.'],
+  ]
+
   return (
     <section className="section soft-section">
       <div className="container">
-        <SectionTitle eyebrow="Understanding the need" title="The challenge" text="Elderly individuals in remote and rural areas often have limited access to specialized cognitive care and continuous healthcare support." />
+        <SectionTitle eyebrow={t('landing.understandingTheNeed') || "Understanding the need"} title={t('landing.theChallenge') || "The challenge"} text={t('landing.challengeText') || "Elderly individuals in remote and rural areas often have limited access to specialized cognitive care and continuous healthcare support."} />
         <div className="challenge-grid">
-          {challenges.map(([title, Icon, txt]) => (
+          {challengeList.map(([title, Icon, txt]) => (
             <article className="challenge-card" key={title}>
               <span className="icon-bubble amber"><Icon size={22} /></span>
               <h3>{title}</h3>
@@ -186,17 +259,30 @@ function Challenges() {
     </section>
   )
 }
-function Features({ onOpenGames, onOpenTakeMeHome }) {
+function Features({ onOpenGames, onOpenTakeMeHome, onOpenLanguageSelector }) {
+  const { t } = useTranslation()
+  const featureList = [
+    [t('landing.cognitiveGames') || 'Cognitive Games', Gamepad2, t('landing.cognitiveGamesDesc') || 'Thoughtful activities for memory, focus, recognition and attention.', 'games'],
+    [t('landing.aiPersonalization') || 'AI Personalization', Sparkles, t('landing.aiPersonalizationDesc') || 'Activities adapt gently based on progress and engagement.', null],
+    [t('landing.voiceAssistance') || 'Voice Assistance', Mic, t('landing.voiceAssistanceDesc') || 'Simple, voice-enabled guidance made for everyday comfort.', null],
+    [t('landing.smartReminders') || 'Smart Reminders', BellRing, t('landing.smartRemindersDesc') || 'Helpful prompts for medicines, hydration and appointments.', null],
+    [t('landing.caregiverMonitoring') || 'Caregiver Monitoring', Activity, t('landing.caregiverMonitoringDesc') || 'A clear view of activity, mood and cognitive engagement.', null],
+    [t('landing.safeReturnHome') || 'Safe Return Home', MapPin, t('landing.safeReturnHomeDesc') || 'Offline-assisted guidance to a saved home location.', 'safeHome'],
+    [t('landing.offlineSupport') || 'Offline Support', WifiOff, t('landing.offlineSupportDesc') || 'Important assistance remains accessible with limited connectivity.', null],
+    [t('landing.multilingualSupport') || 'Multilingual Support', Languages, t('landing.multilingualSupportDesc') || 'Choose from English, Hindi and 8 North-Eastern languages.', 'lang'],
+  ]
+
   return (
     <section className="section" id="features">
       <div className="container">
-        <SectionTitle eyebrow="A connected care ecosystem" title="One platform. Complete cognitive care." text="Gentle, practical support that brings patients, caregivers and healthcare workers closer together." />
+        <SectionTitle eyebrow={t('landing.connectedCareEcosystem') || "A connected care ecosystem"} title={t('landing.onePlatformTitle') || "One platform. Complete cognitive care."} text={t('landing.onePlatformDesc') || "Gentle, practical support that brings patients, caregivers and healthcare workers closer together."} />
         <div className="feature-grid">
-          {features.map(([title, Icon, text], i) => {
-            const isGames = title === 'Cognitive Games'
-            const isSafeHome = title === 'Safe Return Home'
-            const isClickable = isGames || isSafeHome
-            const handleClick = isGames ? onOpenGames : (isSafeHome ? onOpenTakeMeHome : undefined)
+          {featureList.map(([title, Icon, text, actionType], i) => {
+            const isGames = actionType === 'games'
+            const isSafeHome = actionType === 'safeHome'
+            const isLang = actionType === 'lang'
+            const isClickable = isGames || isSafeHome || isLang
+            const handleClick = isGames ? onOpenGames : (isSafeHome ? onOpenTakeMeHome : (isLang ? onOpenLanguageSelector : undefined))
 
             return (
               <article
@@ -218,12 +304,17 @@ function Features({ onOpenGames, onOpenTakeMeHome }) {
                 <p>{text}</p>
                 {isGames && (
                   <span className="feature-arrow" style={{ color: '#157f7a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Explore Games <ArrowRight size={17} />
+                    {t('landing.exploreGames') || 'Explore Games'} <ArrowRight size={17} />
                   </span>
                 )}
                 {isSafeHome && (
                   <span className="feature-arrow" style={{ color: '#157f7a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Take Me Home &amp; SOS <ArrowRight size={17} />
+                    {t('landing.takeMeHomeSOS') || 'Take Me Home & SOS'} <ArrowRight size={17} />
+                  </span>
+                )}
+                {isLang && (
+                  <span className="feature-arrow" style={{ color: '#157f7a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {t('landing.selectLanguage') || 'Select Language'} <ArrowRight size={17} />
                   </span>
                 )}
                 {!isClickable && (
@@ -238,16 +329,17 @@ function Features({ onOpenGames, onOpenTakeMeHome }) {
   )
 }
 function HowItWorks() {
+  const { t } = useTranslation()
   const steps = [
-    ['01', 'Create a Patient Profile', 'A caregiver or health worker creates a simple profile.'],
-    ['02', 'Daily Cognitive Engagement', 'The elder enjoys clear activities at their own pace.'],
-    ['03', 'AI Learns & Adapts', 'The system adjusts activities based on engagement.'],
-    ['04', 'Caregivers Stay Connected', 'See activity, reminders and trends in one place.'],
+    ['01', t('landing.step1Title') || 'Create a Patient Profile', t('landing.step1Desc') || 'A caregiver or health worker creates a simple profile.'],
+    ['02', t('landing.step2Title') || 'Daily Cognitive Engagement', t('landing.step2Desc') || 'The elder enjoys clear activities at their own pace.'],
+    ['03', t('landing.step3Title') || 'AI Learns & Adapts', t('landing.step3Desc') || 'The system adjusts activities based on engagement.'],
+    ['04', t('landing.step4Title') || 'Caregivers Stay Connected', t('landing.step4Desc') || 'See activity, reminders and trends in one place.'],
   ]
   return (
     <section id="how-it-works" className="section how-section">
       <div className="container">
-        <SectionTitle eyebrow="Simple from the start" title="How MindCare works" />
+        <SectionTitle eyebrow={t('landing.simpleFromStart') || "Simple from the start"} title={t('landing.howMindCareWorks') || "How MindCare works"} />
         <div className="steps">
           {steps.map(([no, title, text], i) => (
             <div className="step" key={no}>
@@ -263,6 +355,13 @@ function HowItWorks() {
   )
 }
 function SafeHome({ onOpenTakeMeHome }) {
+  const { t } = useTranslation()
+  const checklist = [
+    t('landing.safeCheck1') || 'Large emergency-friendly SOS button',
+    t('landing.safeCheck2') || 'Simple voice-guided directions',
+    t('landing.safeCheck3') || 'GPS location assistance',
+    t('landing.safeCheck4') || 'One-tap call to caregiver or 112',
+  ]
   return (
     <section className="section" id="safe-home">
       <div className="container safe-home">
@@ -284,39 +383,40 @@ function SafeHome({ onOpenTakeMeHome }) {
           </button>
           <div className="location-note">
             <span className="icon-bubble teal"><Route size={17} /></span>
-            <div><small>Saved location</small><strong>Home • 1.2 km away</strong></div>
+            <div><small>{t('landing.savedLocation') || 'Saved location'}</small><strong>{t('landing.homeAway') || 'Home • 1.2 km away'}</strong></div>
           </div>
         </div>
         <div className="safe-copy">
-          <span className="eyebrow"><MapPin size={14} /> Safety &amp; SOS assistance</span>
-          <h2>Lost or confused? <em>Let us help you get home.</em></h2>
-          <p>Offline-assisted navigation uses your compass direction and GPS location to guide an elderly user toward their saved home location with instant emergency SOS support.</p>
+          <span className="eyebrow"><MapPin size={14} /> {t('landing.safetyAssistance') || 'Safety & SOS assistance'}</span>
+          <h2>{t('landing.lostOrConfused') || 'Lost or confused?'} <em>{t('landing.letUsHelp') || 'Let us help you get home.'}</em></h2>
+          <p>{t('landing.safeCopyText') || 'Offline-assisted navigation uses your compass direction and GPS location to guide an elderly user toward their saved home location with instant emergency SOS support.'}</p>
           <div className="safe-list">
-            {['Large emergency-friendly SOS button', 'Simple voice-guided directions', 'GPS location assistance', 'One-tap call to caregiver or 112'].map(x => (
+            {checklist.map(x => (
               <span key={x}><Check size={16} />{x}</span>
             ))}
           </div>
           <div style={{ marginTop: 20 }}>
             <Button onClick={onOpenTakeMeHome}>
-              Open Take Me Home &amp; SOS <ArrowRight size={18} />
+              {t('landing.openTakeMeHome') || 'Open Take Me Home & SOS'} <ArrowRight size={18} />
             </Button>
           </div>
-          <p className="disclaimer"><Lightbulb size={16} /> Navigation and SOS features provide assistance and do not replace caregiver supervision or emergency services.</p>
+          <p className="disclaimer"><Lightbulb size={16} /> {t('landing.safetyDisclaimer') || 'Navigation and SOS features provide assistance and do not replace caregiver supervision or emergency services.'}</p>
         </div>
       </div>
     </section>
   )
 }
 function Benefits() {
+  const { t } = useTranslation()
   const groups = [
-    ['For Elderly Users', Heart, ['Simple & accessible technology', 'Cognitive engagement', 'Daily routine assistance', 'Greater independence']],
-    ['For Caregivers', UsersRound, ['Activity monitoring', 'Reminder tracking', 'Cognitive performance insights', 'Peace of mind']],
-    ['For Healthcare Workers', Stethoscope, ['Patient activity insights', 'Cognitive engagement trends', 'Remote accessibility', 'Support for rural communities']],
+    [t('landing.forElderly') || 'For Elderly Users', Heart, [t('landing.forElderlyItem1') || 'Simple & accessible technology', t('landing.forElderlyItem2') || 'Cognitive engagement', t('landing.forElderlyItem3') || 'Daily routine assistance', t('landing.forElderlyItem4') || 'Greater independence']],
+    [t('landing.forCaregivers') || 'For Caregivers', UsersRound, [t('landing.forCaregiversItem1') || 'Activity monitoring', t('landing.forCaregiversItem2') || 'Reminder tracking', t('landing.forCaregiversItem3') || 'Cognitive performance insights', t('landing.forCaregiversItem4') || 'Peace of mind']],
+    [t('landing.forHealthcare') || 'For Healthcare Workers', Stethoscope, [t('landing.forHealthcareItem1') || 'Patient activity insights', t('landing.forHealthcareItem2') || 'Cognitive engagement trends', t('landing.forHealthcareItem3') || 'Remote accessibility', t('landing.forHealthcareItem4') || 'Support for rural communities']],
   ]
   return (
     <section className="section soft-section">
       <div className="container">
-        <SectionTitle eyebrow="Care that reaches everyone" title="Designed for independence and peace of mind" />
+        <SectionTitle eyebrow={t('landing.careReachesEveryone') || "Care that reaches everyone"} title={t('landing.designedForIndependence') || "Designed for independence and peace of mind"} />
         <div className="benefit-grid">
           {groups.map(([title, Icon, items], i) => (
             <article className={`benefit-card b-${i}`} key={title}>
@@ -331,17 +431,18 @@ function Benefits() {
   )
 }
 function Future() {
+  const { t } = useTranslation()
   return (
     <section className="section" id="about">
       <div className="container future-wrap">
         <div>
-          <SectionTitle center={false} eyebrow="Growing with every need" title="A platform designed for what comes next." text="MindCare NER begins with a thoughtful foundation and grows alongside the people it serves." />
-          <Button kind="secondary">Learn more <ArrowRight size={17} /></Button>
+          <SectionTitle center={false} eyebrow={t('landing.growingEveryNeed') || "Growing with every need"} title={t('landing.platformNext') || "A platform designed for what comes next."} text={t('landing.platformNextDesc') || "MindCare NER begins with a thoughtful foundation and grows alongside the people it serves."} />
+          <Button kind="secondary">{t('landing.learnMore') || 'Learn more'} <ArrowRight size={17} /></Button>
         </div>
         <div className="future-grid">
           {future.map(([name, Icon]) => (
             <div className="future-card" key={name}>
-              <span className="coming">Coming soon</span>
+              <span className="coming">{t('landing.comingSoon') || 'Coming soon'}</span>
               <Icon size={22} />
               <span>{name}</span>
             </div>
@@ -352,44 +453,53 @@ function Future() {
   )
 }
 function CTA({ openLogin }) {
+  const { t } = useTranslation()
   return (
     <section id="contact" className="cta">
       <div className="container cta-inner">
         <div>
           <span className="eyebrow">MindCare NER</span>
-          <h2>Building a safer and healthier future for elderly care.</h2>
-          <p>Technology can help elders stay mentally engaged, connected, independent and safe.</p>
+          <h2>{t('landing.ctaTitle') || 'Building a safer and healthier future for elderly care.'}</h2>
+          <p>{t('landing.ctaDesc') || 'Technology can help elders stay mentally engaged, connected, independent and safe.'}</p>
         </div>
         <div className="cta-actions">
-          <Button onClick={() => openLogin('Caregiver')}>Get started <ArrowRight size={18} /></Button>
-          <Button kind="secondary">Learn more</Button>
+          <Button onClick={() => openLogin('Caregiver')}>{t('landing.getStarted') || 'Get started'} <ArrowRight size={18} /></Button>
+          <Button kind="secondary">{t('landing.learnMore') || 'Learn more'}</Button>
         </div>
       </div>
     </section>
   )
 }
 function Footer() {
+  const { t } = useTranslation()
+  const navItems = [
+    { key: 'home', label: t('nav.home') || 'Home', href: '#home' },
+    { key: 'features', label: t('nav.features') || 'Features', href: '#features' },
+    { key: 'howItWorks', label: t('nav.howItWorks') || 'How It Works', href: '#how-it-works' },
+    { key: 'about', label: t('nav.about') || 'About', href: '#about' },
+  ]
   return (
     <footer>
       <div className="container footer-top">
         <div>
           <Logo />
-          <p>AI-powered cognitive care and safety platform.</p>
+          <p>{t('landing.footerTagline') || 'AI-powered cognitive care and safety platform.'}</p>
         </div>
         <div className="footer-links">
-          {nav.slice(0, 4).map(x => (
-            <a href={`#${x.toLowerCase().replaceAll(' ', '-')}`} key={x}>{x}</a>
+          {navItems.map(x => (
+            <a href={x.href} key={x.key}>{x.label}</a>
           ))}
         </div>
       </div>
       <div className="container footer-bottom">
-        <p>© 2026 MindCare NER. Designed with care for North East India.</p>
-        <p>MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.</p>
+        <p>{t('landing.copyright') || '© 2026 MindCare NER. Designed with care for North East India.'}</p>
+        <p>{t('landing.medicalNotice') || 'MindCare supports cognitive engagement and elderly care. It does not replace professional medical diagnosis or emergency services.'}</p>
       </div>
     </footer>
   )
 }
 function PatientLoginModal({ onClose, onSignIn }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -474,7 +584,7 @@ function PatientLoginModal({ onClose, onSignIn }) {
         <button
           type="button"
           className="modal-x"
-          aria-label="Close login dialog"
+          aria-label={t('common.close') || "Close"}
           onClick={onClose}
           autoFocus
         >
@@ -486,15 +596,15 @@ function PatientLoginModal({ onClose, onSignIn }) {
         </span>
 
         <h2 id="patient-login-title" className="patient-login-title">
-          Patient Login
+          {t('auth.patientLogin') || 'Patient Login'}
         </h2>
         <p id="patient-login-desc" className="patient-login-desc">
-          Sign in to continue your care journey.
+          {t('auth.patientLoginDesc') || 'Sign in to continue your care journey.'}
         </p>
 
         <form onSubmit={handleSubmit} className="login-form patient-login-form" noValidate>
           <label htmlFor="patient-email-input" className="patient-field-label">
-            <span>Email address</span>
+            <span>{t('auth.emailAddress') || 'Email address'}</span>
             <input
               id="patient-email-input"
               name="email"
@@ -512,7 +622,7 @@ function PatientLoginModal({ onClose, onSignIn }) {
           </label>
 
           <label htmlFor="patient-password-input" className="patient-field-label">
-            <span>Password</span>
+            <span>{t('auth.password') || 'Password'}</span>
             <div className="patient-password-wrapper">
               <input
                 id="patient-password-input"
@@ -524,7 +634,7 @@ function PatientLoginModal({ onClose, onSignIn }) {
                   setPassword(e.target.value)
                   if (error) setError('')
                 }}
-                placeholder="Enter password"
+                placeholder={t('auth.enterPassword') || "Enter password"}
                 autoComplete="current-password"
                 required
               />
@@ -558,9 +668,9 @@ function PatientLoginModal({ onClose, onSignIn }) {
           <Button
             type="submit"
             className="patient-submit-btn"
-            aria-label="Sign In"
+            aria-label={t('auth.signIn') || "Sign In"}
           >
-            <span>Sign In</span>
+            <span>{t('auth.signIn') || 'Sign In'}</span>
             <ArrowRight size={18} aria-hidden="true" />
           </Button>
         </form>
@@ -570,6 +680,7 @@ function PatientLoginModal({ onClose, onSignIn }) {
 }
 
 function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -583,31 +694,31 @@ function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
       onLogin()
       return
     }
-    setError(type === 'Caregiver' ? 'Please enter the sample caregiver credentials shown below.' : 'The patient portal is coming soon.')
+    setError(type === 'Caregiver' ? (t('auth.invalidCredentials') || 'Please enter the sample caregiver credentials shown below.') : 'The patient portal is coming soon.')
   }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className={`modal ${type === 'Caregiver' ? 'login-modal' : ''}`} role="dialog" aria-modal="true" aria-labelledby="login-title" onClick={e => e.stopPropagation()}>
-        <button className="modal-x" aria-label="Close login dialog" onClick={onClose} autoFocus><X /></button>
+        <button className="modal-x" aria-label={t('common.close') || "Close"} onClick={onClose} autoFocus><X /></button>
         <span className="icon-bubble blue"><HeartHandshake /></span>
-        <h2 id="login-title">{isPatient ? 'Patient Login' : `${type} login`}</h2>
+        <h2 id="login-title">{isPatient ? (t('auth.patientLogin') || 'Patient Login') : (t('auth.caregiverLogin') || `${type} login`)}</h2>
         <p>{isPatient
-          ? 'Enter the patient experience directly. No username, password or OTP is required in this kiosk prototype.'
-          : (type === 'Caregiver' ? 'Sign in to view your patient’s care overview.' : `The ${type.toLowerCase()} portal is being prepared for the next phase of MindCare NER.`)}
+          ? (t('auth.patientExperienceDesc') || 'Enter the patient experience directly. No username, password or OTP is required in this kiosk prototype.')
+          : (type === 'Caregiver' ? (t('auth.caregiverLoginDesc') || 'Sign in to view your patient’s care overview.') : `The ${type.toLowerCase()} portal is being prepared for the next phase of MindCare NER.`)}
         </p>
         {type === 'Caregiver' && (
           <form onSubmit={submit} className="login-form">
-            <label>Email address
+            <label>{t('auth.emailAddress') || 'Email address'}
               <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required />
             </label>
-            <label>Password
+            <label>{t('auth.password') || 'Password'}
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" required />
             </label>
             {error && <p className="login-error"><AlertCircle size={15} />{error}</p>}
-            <Button type="submit">Sign in <ArrowRight size={17} /></Button>
+            <Button type="submit">{t('auth.signIn') || 'Sign in'} <ArrowRight size={17} /></Button>
             <div className="demo-credentials">
-              <strong>Sample credentials</strong>
+              <strong>{t('auth.sampleCredentials') || 'Sample credentials'}</strong>
               <span>Email: singhmohak360@gmail.com</span>
               <span>Password: Hello@123</span>
             </div>
@@ -615,12 +726,12 @@ function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
         )}
         {isPatient && (
           <Button onClick={onPatientEnter}>
-            Enter Patient Experience
+            {t('auth.enterPatientExperience') || 'Enter Patient Experience'}
           </Button>
         )}
         {type !== 'Caregiver' && !isPatient && (
           <Button onClick={onClose}>
-            Continue exploring
+            {t('auth.continueExploring') || 'Continue exploring'}
           </Button>
         )}
       </div>
@@ -635,7 +746,8 @@ function LoginModal({ type, onClose, onLogin, onPatientEnter }) {
  * Large, high-contrast header with brand + three oversized control buttons.
  * No hamburger menu. All navigation visible at all times.
  */
-function PatientHeader({ onHome, onHelp, onVoice }) {
+function PatientHeader({ onHome, onHelp, onVoice, onLanguage }) {
+  const { currentLanguage, t } = useTranslation()
   return (
     <header className="pd-header" role="banner">
       <div className="pd-header-inner">
@@ -661,7 +773,7 @@ function PatientHeader({ onHome, onHelp, onVoice }) {
             aria-label="Go to Home screen"
           >
             <Home size={28} aria-hidden="true" />
-            <span>Home</span>
+            <span>{t('common.home') || 'Home'}</span>
           </button>
           <button
             type="button"
@@ -670,7 +782,7 @@ function PatientHeader({ onHome, onHelp, onVoice }) {
             aria-label="Call for Help"
           >
             <Phone size={28} aria-hidden="true" />
-            <span>Help</span>
+            <span>{t('common.help') || 'Help'}</span>
           </button>
           <button
             type="button"
@@ -679,7 +791,17 @@ function PatientHeader({ onHome, onHelp, onVoice }) {
             aria-label="Activate Voice Control"
           >
             <Mic size={28} aria-hidden="true" />
-            <span>Voice</span>
+            <span>{t('patient.voiceGuidance') || 'Voice'}</span>
+          </button>
+          <button
+            type="button"
+            className="pd-ctrl-btn pd-ctrl-lang"
+            onClick={onLanguage}
+            aria-label={`Change language. Currently ${currentLanguage?.nativeName || 'English'}`}
+            title="Change language"
+          >
+            <Languages size={28} aria-hidden="true" />
+            <span>{currentLanguage?.code ? currentLanguage.code.toUpperCase() : 'Lang'}</span>
           </button>
         </nav>
       </div>
@@ -769,6 +891,7 @@ const TODAY_ACTIVITY = ACTIVITY_DATA['memory-match']
  * - No accidental logout, no swipe gestures, no timeout-based automatic confirmation
  */
 function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
+  const { t } = useTranslation()
   const modalRef = useRef(null)
   const cancelButtonRef = useRef(null)
 
@@ -833,7 +956,7 @@ function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
         <button
           type="button"
           className="modal-x"
-          aria-label="Close confirmation dialog and return to dashboard"
+          aria-label={t('common.close') || "Close confirmation dialog and return to dashboard"}
           onClick={onCancel}
         >
           <X size={20} aria-hidden="true" />
@@ -844,11 +967,11 @@ function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
         </div>
 
         <h2 id="logout-confirm-title" className="pd-confirm-title">
-          Are you sure?
+          {t('patient.areYouSure') || 'Are you sure?'}
         </h2>
 
         <p id="logout-confirm-desc" className="pd-confirm-desc">
-          Do you want to leave the patient dashboard?
+          {t('patient.leaveDashboardConfirm') || 'Do you want to leave the patient dashboard?'}
         </p>
 
         <div className="pd-confirm-actions">
@@ -859,14 +982,14 @@ function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
             onClick={onCancel}
             autoFocus
           >
-            Go Back
+            {t('common.goBack') || 'Go Back'}
           </button>
           <button
             type="button"
             className="pd-confirm-btn-proceed"
             onClick={onConfirm}
           >
-            Continue
+            {t('common.continue') || 'Continue'}
           </button>
         </div>
       </div>
@@ -891,6 +1014,7 @@ function PatientLogoutConfirmModal({ onCancel, onConfirm }) {
  * - Safe prototype PIN validation isolated in authConfig
  */
 function CaregiverPinModal({ onCancel, onSuccess }) {
+  const { t } = useTranslation()
   const [pin, setPin] = useState('')
   const [error, setError] = useState('')
   const modalRef = useRef(null)
@@ -913,18 +1037,18 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
         )
         if (!focusable || focusable.length === 0) return
 
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
+        const firstElement = focusable[0]
+        const lastElement = focusable[focusable.length - 1]
 
         if (e.shiftKey) {
-          if (document.activeElement === first) {
+          if (document.activeElement === firstElement) {
             e.preventDefault()
-            last.focus()
+            lastElement.focus()
           }
         } else {
-          if (document.activeElement === last) {
+          if (document.activeElement === lastElement) {
             e.preventDefault()
-            first.focus()
+            firstElement.focus()
           }
         }
       }
@@ -974,7 +1098,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
     if (result.success) {
       onSuccess()
     } else {
-      setError(result.error || "That PIN isn't correct. Please try again.")
+      setError(result.error || (t('auth.pinIncorrect') || "That PIN isn't correct. Please try again."))
       setPin('')
       inputRef.current?.focus()
     }
@@ -994,7 +1118,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
         <button
           type="button"
           className="modal-x"
-          aria-label="Cancel and return to dashboard"
+          aria-label={t('common.cancel') || "Cancel and return to dashboard"}
           onClick={onCancel}
         >
           <X size={20} aria-hidden="true" />
@@ -1005,11 +1129,11 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
         </div>
 
         <h2 id="caregiver-pin-title" className="caregiver-pin-title">
-          Caregiver Authorization
+          {t('patient.caregiverAuthorization') || 'Caregiver Authorization'}
         </h2>
 
         <p id="caregiver-pin-desc" className="caregiver-pin-desc">
-          Enter caregiver PIN to end this session.
+          {t('patient.enterPinToEnd') || 'Enter caregiver PIN to end this session.'}
         </p>
 
         {error && (
@@ -1022,7 +1146,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
         <form onSubmit={handleSubmit} noValidate>
           <div className="pin-input-wrap">
             <label htmlFor="caregiver-pin-input" className="sr-only">
-              Caregiver PIN
+              {t('patient.caregiverPin') || 'Caregiver PIN'}
             </label>
             <input
               id="caregiver-pin-input"
@@ -1036,7 +1160,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
               onChange={handleInputChange}
               placeholder="••••"
               className="caregiver-pin-input"
-              aria-label="Caregiver numeric PIN"
+              aria-label={t('patient.caregiverPin') || "Caregiver numeric PIN"}
               aria-invalid={Boolean(error)}
             />
           </div>
@@ -1058,9 +1182,9 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
               type="button"
               className="pin-key pin-key-util"
               onClick={() => handleKeypadPress('clear')}
-              aria-label="Clear PIN"
+              aria-label={t('common.clear') || "Clear PIN"}
             >
-              Clear
+              {t('common.clear') || 'Clear'}
             </button>
             <button
               type="button"
@@ -1074,7 +1198,7 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
               type="button"
               className="pin-key pin-key-util"
               onClick={() => handleKeypadPress('backspace')}
-              aria-label="Delete last digit"
+              aria-label={t('common.back') || "Delete last digit"}
             >
               ⌫
             </button>
@@ -1082,14 +1206,14 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
 
           <div className="caregiver-pin-actions">
             <button type="submit" className="pin-submit-btn">
-              Submit
+              {t('common.submit') || 'Submit'}
             </button>
             <button
               type="button"
               className="pin-cancel-btn"
               onClick={onCancel}
             >
-              Cancel
+              {t('common.cancel') || 'Cancel'}
             </button>
           </div>
         </form>
@@ -1111,11 +1235,12 @@ function CaregiverPinModal({ onCancel, onSuccess }) {
  * Reads from PatientSessionContext:
  *   session.displayName — personalises the greeting; falls back gracefully when null
  */
-function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHome }) {
+function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHome, onOpenLanguageSelector }) {
   // Session — read displayName for the greeting.
   // displayName is null if unavailable; the greeting degrades gracefully to "Good Morning!".
   // Do NOT expose email, password, or sensitive medical info on the dashboard.
   const [session] = usePatientSession()
+  const { t } = useTranslation()
   const base = getTimeGreeting()                   // e.g. "Good Morning"
   const displayName = session?.displayName || null
   const localDate = getLocalDate()                 // e.g. "Friday, September 4"
@@ -1178,7 +1303,12 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
         Skip to main content
       </a>
 
-      <PatientHeader onHome={onHome} onHelp={handleHelp} onVoice={handleVoice} />
+      <PatientHeader
+        onHome={onHome}
+        onHelp={handleHelp}
+        onVoice={handleVoice}
+        onLanguage={onOpenLanguageSelector}
+      />
 
       {/* tabIndex={-1} so the skip link can programmatically focus this element */}
       <main className="pd-main" id="pd-main-content" tabIndex={-1}>
@@ -1238,7 +1368,7 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
             )}
           </h1>
           <p className="pd-welcome-date" aria-hidden="true">{localDate}</p>
-          <p className="pd-welcome-sub">Let's choose an activity for today.</p>
+          <p className="pd-welcome-sub">{t('patient.chooseActivity') || "Let's choose an activity for today."}</p>
         </section>
 
         {/* ── Today's Progress ──────────────────────────────────── */}
@@ -1247,10 +1377,10 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
             <div className="pd-progress-header">
               <div className="pd-progress-title-wrap">
                 <CircleCheck size={26} aria-hidden="true" />
-                <h2 id="pd-progress-heading" className="pd-progress-title">Today's Progress</h2>
+                <h2 id="pd-progress-heading" className="pd-progress-title">{t('patient.todaysProgress') || "Today's Progress"}</h2>
               </div>
-              <span className="pd-progress-count" aria-label={`${completedCount} of ${totalTodayActivities} activities completed`}>
-                {completedCount} of {totalTodayActivities} Completed
+              <span className="pd-progress-count" aria-label={`${completedCount} of ${totalTodayActivities} ${t('patient.activitiesCompleted') || 'activities completed'}`}>
+                {completedCount} of {totalTodayActivities} {t('common.completed') || 'Completed'}
               </span>
             </div>
             <div
@@ -1259,15 +1389,15 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
               aria-valuenow={progressPercent}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label="Today's activity progress"
+              aria-label={t('patient.activityProgress') || "Today's activity progress"}
             >
               <div className="pd-progress-bar-fill" style={{ width: `${progressPercent}%` }} />
             </div>
-            <p className="pd-progress-sub">Great job today! You're making gentle, steady progress.</p>
+            <p className="pd-progress-sub">{t('patient.greatJob') || "Great job today! You're making gentle, steady progress."}</p>
           </div>
           <div className="pd-progress-badge" aria-hidden="true">
             <Sparkles size={20} />
-            <span>Keep Going</span>
+            <span>{t('patient.keepGoing') || 'Keep Going'}</span>
           </div>
         </section>
 
@@ -1276,28 +1406,28 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
           <div className="pd-today-content">
             <div className="pd-recommended-badge" aria-hidden="true">
               <Sparkles size={14} />
-              <span>Recommended Activity</span>
+              <span>{t('patient.recommendedActivity') || 'Recommended Activity'}</span>
             </div>
             <p className="pd-today-label">
-              <span aria-hidden="true">⭐ </span>Featured For You
+              <span aria-hidden="true">⭐ </span>{t('patient.featuredForYou') || 'Featured For You'}
             </p>
-            <h2 id="pd-today-heading" className="pd-today-title">{TODAY_ACTIVITY.title}</h2>
-            <p className="pd-today-desc">{TODAY_ACTIVITY.subtitle}. Let's try a gentle memory exercise together.</p>
+            <h2 id="pd-today-heading" className="pd-today-title">{t('games.memoryMatch') || TODAY_ACTIVITY.title}</h2>
+            <p className="pd-today-desc">{t('games.memoryMatchDesc') || TODAY_ACTIVITY.subtitle}. {t('patient.tryGentleExercise') || "Let's try a gentle memory exercise together."}</p>
           </div>
           <button
             type="button"
             className="pd-start-btn"
             onClick={() => onNavigateActivity(TODAY_ACTIVITY.id)}
-            aria-label={`Start recommended activity: ${TODAY_ACTIVITY.title}`}
+            aria-label={`${t('patient.startActivity') || 'Start Activity'}: ${t('games.memoryMatch') || TODAY_ACTIVITY.title}`}
           >
-            <span>Start Activity</span>
+            <span>{t('patient.startActivity') || 'Start Activity'}</span>
             <ArrowRight size={30} aria-hidden="true" />
           </button>
         </section>
 
         {/* ── Today's Activities ───────────────────────────────── */}
         <section className="pd-activities-section" aria-labelledby="pd-activities-heading">
-          <h2 id="pd-activities-heading" className="pd-section-heading">Today's Activities</h2>
+          <h2 id="pd-activities-heading" className="pd-section-heading">{t('patient.todayActivities') || "Today's Activities"}</h2>
           {/*
             Each card is a <button> so it is:
             • Reachable by Tab key
@@ -1306,23 +1436,36 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
             Each card navigates to its own dedicated placeholder page.
           */}
           <div className="pd-activity-grid">
-            {ACTIVITY_CARDS.map(({ id, title, subtitle, Icon, colorClass }) => (
-              <button
-                key={id}
-                type="button"
-                className={`pd-activity-card ${colorClass}`}
-                onClick={() => onNavigateActivity(id)}
-                aria-label={`${title} — ${subtitle}. Tap to open.`}
-              >
-                <div className="pd-card-icon" aria-hidden="true">
-                  <Icon size={48} />
-                </div>
-                <div className="pd-card-body" aria-hidden="true">
-                  <p className="pd-card-title">{title}</p>
-                  <p className="pd-card-sub">{subtitle}</p>
-                </div>
-              </button>
-            ))}
+            {ACTIVITY_CARDS.map(({ id, title, subtitle, Icon, colorClass }) => {
+              const localizedTitle = id === 'brain-games' ? (t('patient.brainGames') || title)
+                : id === 'memory-activity' ? (t('patient.memoryActivity') || title)
+                : id === 'music-memories' ? (t('patient.musicMemories') || title)
+                : id === 'talk-recall' ? (t('patient.talkRecall') || title)
+                : title
+              const localizedSub = id === 'brain-games' ? (t('patient.trainMemory') || subtitle)
+                : id === 'memory-activity' ? (t('patient.practiceRemembering') || subtitle)
+                : id === 'music-memories' ? (t('patient.listenRemember') || subtitle)
+                : id === 'talk-recall' ? (t('patient.talkFamiliar') || subtitle)
+                : subtitle
+
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`pd-activity-card ${colorClass}`}
+                  onClick={() => onNavigateActivity(id)}
+                  aria-label={`${localizedTitle} — ${localizedSub}. ${t('patient.tapToOpen') || 'Tap to open.'}`}
+                >
+                  <div className="pd-card-icon" aria-hidden="true">
+                    <Icon size={48} />
+                  </div>
+                  <div className="pd-card-body" aria-hidden="true">
+                    <p className="pd-card-title">{localizedTitle}</p>
+                    <p className="pd-card-sub">{localizedSub}</p>
+                  </div>
+                </button>
+              )
+            })}
           </div>
         </section>
 
@@ -1345,13 +1488,13 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
               </span>
               <div>
                 <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#157f7a', textTransform: 'uppercase' }}>
-                  Safety &amp; Assistance
+                  {t('patient.safetyAssistance') || 'Safety & Assistance'}
                 </span>
                 <h3 id="pd-safety-heading" style={{ margin: '3px 0 4px', fontSize: 21, color: '#173944', fontFamily: 'Fraunces, Georgia, serif' }}>
-                  Take Me Home &amp; SOS
+                  {t('patient.takeMeHomeSOS') || 'Take Me Home & SOS'}
                 </h3>
                 <p style={{ margin: 0, fontSize: 14, color: '#55747a' }}>
-                  Compass navigation toward home and direct emergency contact support.
+                  {t('patient.takeMeHomeDesc') || 'Compass navigation toward home and direct emergency contact support.'}
                 </p>
               </div>
             </div>
@@ -1372,7 +1515,7 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
                 boxShadow: '0 6px 18px rgba(21, 127, 122, 0.25)'
               }}
             >
-              <span>Take Me Home &amp; SOS</span>
+              <span>{t('patient.takeMeHomeSOS') || 'Take Me Home & SOS'}</span>
               <ArrowRight size={20} aria-hidden="true" />
             </button>
           </div>
@@ -1391,22 +1534,18 @@ function PatientDashboard({ onHome, onNavigateActivity, onLogout, onOpenTakeMeHo
         <section className="pd-danger-section" aria-labelledby="pd-danger-heading">
           <div className="pd-danger-card">
             <div className="pd-danger-info">
-              <span className="pd-danger-tag">Device Session</span>
-              <h2 id="pd-danger-heading" className="pd-danger-title">Danger Zone</h2>
-              <p className="pd-danger-desc">Leaving this device will end the patient session.</p>
+              <span className="pd-danger-tag">{t('patient.deviceSession') || 'Device Session'}</span>
+              <h2 id="pd-danger-heading" className="pd-danger-title">{t('patient.dangerZone') || 'Danger Zone'}</h2>
+              <p className="pd-danger-desc">{t('patient.dangerZoneDesc') || 'Leaving this device will end the patient session.'}</p>
             </div>
-            {/*
-              TODO: Implement full logout confirmation and session termination
-              in the next milestone.
-            */}
             <button
               type="button"
               className="pd-logout-btn"
               onClick={handleLogoutClick}
-              aria-label="Log Out. Leaving this device will end the patient session."
+              aria-label={t('patient.logoutDevice') || "Log Out. Leaving this device will end the patient session."}
             >
               <LogOut size={18} aria-hidden="true" />
-              <span>Log Out</span>
+              <span>{t('common.logout') || 'Log Out'}</span>
             </button>
           </div>
         </section>
@@ -1541,53 +1680,80 @@ function ActivityPlaceholder({ activityId, onHome, onDashboard }) {
 }
 
 /* ─── Caregiver Dashboard ────────────────────────────────────────── */
-function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome }) {
+function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome, onOpenLanguageSelector }) {
+  const { currentLanguage, setLanguage, t } = useTranslation()
+  const [langNotice, setLangNotice] = useState('')
+
   const stats = [
-    ['Today’s activity', '42 min', Clock3, 'teal'],
-    ['Cognitive score', '72 / 100', TrendingUp, 'violet'],
-    ['Medication', '2 of 3 taken', Pill, 'coral'],
-    ['Next appointment', '12 Sep', CalendarDays, 'blue']
+    [t('caregiver.statActivity') || "Today's activity", '42 min', Clock3, 'teal'],
+    [t('caregiver.statCognitive') || 'Cognitive score', '72 / 100', TrendingUp, 'violet'],
+    [t('caregiver.statMedication') || 'Medication', `2 of 3 ${t('common.completed')?.toLowerCase() || 'taken'}`, Pill, 'coral'],
+    [t('caregiver.statNextAppt') || 'Next appointment', '12 Sep', CalendarDays, 'blue']
   ]
   return (
     <div className="dashboard">
       <header className="dash-header">
         <div className="dash-brand">
           <Logo />
-          <span>Caregiver portal</span>
+          <span>{t('caregiver.portal') || 'Caregiver portal'}</span>
         </div>
         <div className="dash-actions">
           <ThemeToggle dark={dark} onToggle={onToggleTheme} />
+          <button
+            type="button"
+            className="dash-lang-btn"
+            onClick={onOpenLanguageSelector}
+            aria-label={`Language selector. Currently ${currentLanguage?.name || 'English'}`}
+            title="Change language"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              minHeight: 44,
+              padding: '8px 14px',
+              borderRadius: 10,
+              border: '1.5px solid #157f7a',
+              background: '#f0fdfa',
+              color: '#0f766e',
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: 14,
+            }}
+          >
+            <Languages size={18} />
+            <span>🌐 {currentLanguage?.nativeName || 'English'}</span>
+          </button>
           <button className="notification"><BellRing size={19} /><i /></button>
           <div className="caregiver-name">
             <span>MS</span>
-            <div><strong>Mohak Singh</strong><small>Caregiver</small></div>
+            <div><strong>Mohak Singh</strong><small>{t('caregiver.role') || 'Caregiver'}</small></div>
             <ChevronDown size={15} />
           </div>
-          <button className="logout" onClick={onLogout}><LogOut size={17} /> <b>Logout</b></button>
+          <button className="logout" onClick={onLogout}><LogOut size={17} /> <b>{t('common.logout') || 'Logout'}</b></button>
         </div>
       </header>
       <main className="dash-main">
         <section className="dash-welcome">
           <div>
-            <p className="dash-kicker">CARE OVERVIEW</p>
-            <h1>Good morning, Mohak.</h1>
-            <p>Here’s how Mr. Ramesh Das is doing today.</p>
+            <p className="dash-kicker">{t('caregiver.careOverview') || 'CARE OVERVIEW'}</p>
+            <h1>{t('caregiver.greeting') || 'Good morning, Mohak.'}</h1>
+            <p>{t('caregiver.patientStatus') || 'Here’s how Mr. Ramesh Das is doing today.'}</p>
           </div>
-          <div className="sync-status"><CircleCheck size={18} /> Last updated today, 9:42 AM</div>
+          <div className="sync-status"><CircleCheck size={18} /> {t('caregiver.lastUpdated') || 'Last updated today, 9:42 AM'}</div>
         </section>
         <section className="patient-banner">
           <div className="patient-avatar">RD</div>
           <div className="patient-summary">
-            <span>YOUR PATIENT</span>
-            <h2>Mr. Ramesh Das <i>•</i> <small>72 years</small></h2>
-            <p><MapPin size={15} /> Guwahati, Assam <b>•</b> Patient ID: MC-2048</p>
+            <span>{t('caregiver.yourPatient') || 'YOUR PATIENT'}</span>
+            <h2>Mr. Ramesh Das <i>•</i> <small>72 {t('caregiver.yearsOld') || 'years'}</small></h2>
+            <p><MapPin size={15} /> Guwahati, Assam <b>•</b> {t('caregiver.patientId') || 'Patient ID'}: MC-2048</p>
           </div>
           <div className="risk-chip">
-            <span>DEMENTIA LEVEL</span>
-            <strong>Moderate</strong>
-            <small>Needs regular support</small>
+            <span>{t('caregiver.dementiaLevel') || 'DEMENTIA LEVEL'}</span>
+            <strong>{t('caregiver.moderate') || 'Moderate'}</strong>
+            <small>{t('caregiver.needsSupport') || 'Needs regular support'}</small>
           </div>
-          <button className="view-profile">View full profile <ArrowRight size={16} /></button>
+          <button className="view-profile">{t('caregiver.viewProfile') || 'View full profile'} <ArrowRight size={16} /></button>
         </section>
         <section className="stat-grid">
           {stats.map(([name, value, Icon, color]) => (
@@ -1606,8 +1772,8 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome })
         <section className="dash-grid">
           <div className="dash-card progress-card">
             <div className="card-title">
-              <div><p className="dash-kicker">COGNITIVE PROGRESS</p><h2>Weekly engagement</h2></div>
-              <button>This week <ChevronDown size={14} /></button>
+              <div><p className="dash-kicker">{t('caregiver.cognitiveProgress') || 'COGNITIVE PROGRESS'}</p><h2>{t('caregiver.weeklyEngagement') || 'Weekly engagement'}</h2></div>
+              <button>{t('caregiver.thisWeek') || 'This week'} <ChevronDown size={14} /></button>
             </div>
             <div className="chart">
               <div className="chart-labels"><span>100</span><span>75</span><span>50</span><span>25</span></div>
@@ -1623,19 +1789,19 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome })
             </div>
             <div className="progress-note">
               <TrendingUp size={18} />
-              <span><b>12% improvement</b> in cognitive engagement compared with last week.</span>
+              <span><b>12% improvement</b> {t('caregiver.improvementCompared') || 'in cognitive engagement compared with last week.'}</span>
             </div>
           </div>
           <div className="dash-card routine-card">
             <div className="card-title">
-              <div><p className="dash-kicker">TODAY’S ROUTINE</p><h2>Care tasks</h2></div>
-              <button className="link-btn">View all</button>
+              <div><p className="dash-kicker">{t('caregiver.todaysRoutine') || 'TODAY’S ROUTINE'}</p><h2>{t('caregiver.careTasks') || 'Care tasks'}</h2></div>
+              <button className="link-btn">{t('caregiver.viewAll') || 'View all'}</button>
             </div>
             {[
-              ['Morning medicine', '8:00 AM', 'Completed', true],
-              ['Memory matching activity', '10:30 AM', 'Completed', true],
-              ['Afternoon medicine', '2:00 PM', 'Upcoming', false],
-              ['Evening walk', '5:30 PM', 'Upcoming', false]
+              [t('caregiver.taskMorningMed') || 'Morning medicine', '8:00 AM', t('common.completed') || 'Completed', true],
+              [t('caregiver.taskMemoryGame') || 'Memory matching activity', '10:30 AM', t('common.completed') || 'Completed', true],
+              [t('caregiver.taskAfternoonMed') || 'Afternoon medicine', '2:00 PM', t('caregiver.upcoming') || 'Upcoming', false],
+              [t('caregiver.taskEveningWalk') || 'Evening walk', '5:30 PM', t('caregiver.upcoming') || 'Upcoming', false]
             ].map(([task, time, state, done]) => (
               <div className="task-row" key={task}>
                 <span className={done ? 'task-check done' : 'task-check'}>
@@ -1648,23 +1814,70 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome })
           </div>
           <div className="dash-card details-card">
             <div className="card-title">
-              <div><p className="dash-kicker">PATIENT DETAILS</p><h2>Health snapshot</h2></div>
+              <div><p className="dash-kicker">{t('caregiver.patientDetails') || 'PATIENT DETAILS'}</p><h2>{t('caregiver.healthSnapshot') || 'Health snapshot'}</h2></div>
               <UserRound size={21} />
             </div>
             <div className="detail-list">
-              <p><span>Blood group</span><b>B+</b></p>
-              <p><span>Primary language</span><b>Assamese, Hindi</b></p>
-              <p><span>Emergency contact</span><b>{getEmergencyContact()?.phone || 'Not set'}</b></p>
-              <p><span>Care physician</span><b>Dr. Ananya Bora</b></p>
+              <p><span>{t('caregiver.bloodGroup') || 'Blood group'}</span><b>B+</b></p>
+              <p><span>{t('caregiver.primaryLanguage') || 'Primary language'}</span><b>{currentLanguage.name} ({currentLanguage.nativeName})</b></p>
+              <p><span>{t('caregiver.emergencyContact') || 'Emergency contact'}</span><b>{getEmergencyContact()?.phone || 'Not set'}</b></p>
+              <p><span>{t('caregiver.carePhysician') || 'Care physician'}</span><b>Dr. Ananya Bora</b></p>
+            </div>
+          </div>
+          <div className="dash-card lang-setting-card" style={{ gridColumn: 'span 2' }}>
+            <div className="card-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <div>
+                <p className="dash-kicker">{t('caregiver.preferences') || 'PATIENT PREFERENCES'}</p>
+                <h2>{t('caregiver.preferredLanguage') || 'Patient Preferred Language'}</h2>
+              </div>
+              <Languages size={22} style={{ color: '#157f7a' }} />
+            </div>
+            <p style={{ margin: '0 0 16px', fontSize: 14, color: 'var(--text-muted, #64748b)' }}>
+              {t('caregiver.preferredLanguageDesc') || 'Choose the primary dialect and script for the patient interface, cognitive games, and voice guidance.'}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <select
+                value={currentLanguage.code}
+                onChange={(e) => {
+                  const newCode = e.target.value
+                  setLanguage(newCode)
+                  const targetLang = SUPPORTED_LANGUAGES.find((l) => l.code === newCode)
+                  setLangNotice(`${t('caregiver.languageUpdatedNotice') || 'Patient language updated to'} ${targetLang?.name || newCode} (${targetLang?.nativeName || ''})`)
+                  setTimeout(() => setLangNotice(''), 6000)
+                }}
+                aria-label={t('caregiver.preferredLanguage') || "Patient Preferred Language"}
+                style={{
+                  padding: '10px 16px',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  borderRadius: 10,
+                  border: '2px solid #157f7a',
+                  background: 'var(--card-bg, #ffffff)',
+                  color: 'var(--text-primary, #1e293b)',
+                  minWidth: 260,
+                  cursor: 'pointer',
+                }}
+              >
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name} — {lang.nativeName} ({lang.region})
+                  </option>
+                ))}
+              </select>
+              {langNotice && (
+                <span style={{ fontSize: 14, fontWeight: 700, color: '#0d9488', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <CircleCheck size={18} /> {langNotice}
+                </span>
+              )}
             </div>
           </div>
           <div className="dash-card insights-card">
             <div className="card-title">
-              <div><p className="dash-kicker">CARE INSIGHT</p><h2>Today’s note</h2></div>
+              <div><p className="dash-kicker">{t('caregiver.careInsight') || 'CARE INSIGHT'}</p><h2>{t('caregiver.todaysNote') || 'Today’s note'}</h2></div>
               <Sparkles size={21} />
             </div>
-            <p>Ramesh showed strong recognition during the family-photo activity and responded well to voice prompts.</p>
-            <div><Heart size={16} fill="currentColor" /> Mood: <b>Calm &amp; engaged</b></div>
+            <p>{t('caregiver.insightText') || 'Ramesh showed strong recognition during the family-photo activity and responded well to voice prompts.'}</p>
+            <div><Heart size={16} fill="currentColor" /> {t('caregiver.mood') || 'Mood'}: <b>{t('caregiver.calmEngaged') || 'Calm & engaged'}</b></div>
           </div>
         </section>
       </main>
@@ -1673,7 +1886,7 @@ function CaregiverDashboard({ onLogout, dark, onToggleTheme, onOpenTakeMeHome })
 }
 
 /* ─── App Root ───────────────────────────────────────────────────── */
-export default function App() {
+function AppRoot() {
   const [login, setLogin] = useState(null)
   const [dashboard, setDashboard] = useState(false)
   const [dark, setDark] = useState(() => localStorage.getItem('mindcare-theme') === 'dark')
@@ -1690,6 +1903,7 @@ export default function App() {
    *   'landing'              — landing page
    *   'games'                — cognitive games hub
    *   'take-me-home'         — safe home navigation and SOS assistance
+   *   'language-select'      — accessible language selector screen
    *   'patient-dashboard'    — patient dashboard
    *   'activity:{id}'        — activity page for the given id (memory-match, word-recall, etc.)
    *                            id is a key in ACTIVITY_DATA
@@ -1700,21 +1914,21 @@ export default function App() {
       const historyView = window.history.state?.view
       // If user has an active session running in this tab, restore exact view
       if (isPatientSessionActive()) {
-        if (sessionView && (sessionView === 'patient-dashboard' || sessionView.startsWith('activity:') || sessionView === 'games' || sessionView === 'take-me-home')) {
+        if (sessionView && (sessionView === 'patient-dashboard' || sessionView.startsWith('activity:') || sessionView === 'games' || sessionView === 'take-me-home' || sessionView === 'language-select')) {
           return sessionView
         }
-        if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home')) {
+        if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home' || historyView === 'language-select')) {
           return historyView
         }
         return 'patient-dashboard'
       }
       // If returning via browser history and device setup was completed
-      if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home')) {
-        if (isPatientDeviceSetupComplete() || historyView === 'games' || historyView === 'take-me-home' || historyView.startsWith('activity:')) {
+      if (historyView && (historyView === 'patient-dashboard' || historyView.startsWith('activity:') || historyView === 'games' || historyView === 'take-me-home' || historyView === 'language-select')) {
+        if (isPatientDeviceSetupComplete() || historyView === 'games' || historyView === 'take-me-home' || historyView === 'language-select' || historyView.startsWith('activity:')) {
           return historyView
         }
       }
-      if (historyView === 'games' || historyView === 'take-me-home' || historyView?.startsWith('activity:')) {
+      if (historyView === 'games' || historyView === 'take-me-home' || historyView === 'language-select' || historyView?.startsWith('activity:')) {
         return historyView
       }
     }
@@ -1747,7 +1961,7 @@ export default function App() {
   function navigateTo(nextView) {
     setView(nextView)
     window.history.pushState({ view: nextView }, '')
-    if (nextView === 'patient-dashboard' || nextView.startsWith('activity:') || nextView === 'games' || nextView === 'take-me-home') {
+    if (nextView === 'patient-dashboard' || nextView.startsWith('activity:') || nextView === 'games' || nextView === 'take-me-home' || nextView === 'language-select') {
       const current = activeSession || restoreActivePatientSession()
       if (current) {
         saveActivePatientSession(current, nextView)
@@ -1862,6 +2076,31 @@ export default function App() {
     )
   }
 
+  // ── Language Selector View ──────────────────────────────────
+  if (view === 'language-select') {
+    const hasSession = Boolean(activeSession || isPatientSessionActive())
+    const handleBackFromLang = () => {
+      if (dashboard) {
+        // Return to Caregiver Portal
+        navigateTo('landing')
+      } else if (hasSession) {
+        backToDashboard()
+      } else {
+        backToLanding()
+      }
+    }
+    const backLabel = dashboard
+      ? 'Back to Caregiver Portal'
+      : (hasSession ? 'Back to Dashboard' : 'Back to Home')
+
+    return (
+      <LanguageSelectorScreen
+        onBack={handleBackFromLang}
+        backLabel={backLabel}
+      />
+    )
+  }
+
   if (dashboard) {
     return (
       <CaregiverDashboard
@@ -1869,6 +2108,7 @@ export default function App() {
         dark={dark}
         onToggleTheme={toggleTheme}
         onOpenTakeMeHome={() => navigateTo('take-me-home')}
+        onOpenLanguageSelector={() => navigateTo('language-select')}
       />
     )
   }
@@ -1934,6 +2174,7 @@ export default function App() {
               onNavigateActivity={navigateActivity}
               onLogout={handlePatientLogout}
               onOpenTakeMeHome={() => navigateTo('take-me-home')}
+              onOpenLanguageSelector={() => navigateTo('language-select')}
             />
           ) : (
             <ActivityPlaceholder
@@ -1950,13 +2191,19 @@ export default function App() {
   // ── Landing page (default) ───────────────────────────────────
   return (
     <>
-      <Navbar openLogin={handleOpenLogin} dark={dark} onToggleTheme={toggleTheme} />
+      <Navbar
+        openLogin={handleOpenLogin}
+        dark={dark}
+        onToggleTheme={toggleTheme}
+        onOpenLanguageSelector={() => navigateTo('language-select')}
+      />
       <main id="main-content" tabIndex={-1}>
         <Hero openLogin={handleOpenLogin} />
         <Challenges />
         <Features
           onOpenGames={() => navigateTo('games')}
           onOpenTakeMeHome={() => navigateTo('take-me-home')}
+          onOpenLanguageSelector={() => navigateTo('language-select')}
         />
         <HowItWorks />
         <SafeHome onOpenTakeMeHome={() => navigateTo('take-me-home')} />
@@ -1982,5 +2229,13 @@ export default function App() {
         />
       )}
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppRoot />
+    </LanguageProvider>
   )
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Home, RotateCcw, ArrowRight, Trophy, Timer, Target, Brain, ArrowLeft } from 'lucide-react'
+import { useTranslation } from '../../i18n'
 import './MemoryMatch.css'
 
 // Simple, familiar emoji set — kept identical across levels so the
@@ -53,6 +54,7 @@ function recommendationFor(score) {
 }
 
 export default function MemoryMatch({ onBack, onBackToGames, backLabel = 'Back to Home' }) {
+  const { t } = useTranslation()
   const [level, setLevel] = useState(1)
   const [deck, setDeck] = useState(() => buildDeck(1))
   const [flippedIds, setFlippedIds] = useState([])
@@ -215,8 +217,8 @@ export default function MemoryMatch({ onBack, onBackToGames, backLabel = 'Back t
               <Brain size={22} />
             </span>
             <div>
-              <h1>Memory Match</h1>
-              <p>A gentle visual memory practice activity</p>
+              <h1>{t('games.memoryMatchTitle') || 'Memory Match'}</h1>
+              <p>{t('games.memoryMatchInstruction') || 'A gentle visual memory practice activity'}</p>
             </div>
           </div>
         </div>
@@ -239,7 +241,7 @@ export default function MemoryMatch({ onBack, onBackToGames, backLabel = 'Back t
           </div>
           <button type="button" className="btn btn-secondary mm-restart" onClick={handleRestart}>
             <RotateCcw size={18} aria-hidden="true" />
-            <span>Restart Game</span>
+            <span>{t('games.retry') || 'Restart Game'}</span>
           </button>
         </section>
 

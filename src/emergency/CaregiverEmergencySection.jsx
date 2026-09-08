@@ -12,9 +12,11 @@ import {
   saveEmergencyConfig,
   validatePhoneNumber
 } from './emergencyContactService'
+import { useTranslation } from '../i18n'
 import './CaregiverEmergencySection.css'
 
 export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
+  const { t } = useTranslation()
   const [contact, setContact] = useState(getEmergencyContact)
   const [homeLocation, setHomeLocation] = useState(getHomeLocation)
   const [emergencyConfig, setEmergencyConfig] = useState(getEmergencyConfig)
@@ -124,8 +126,8 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
     <section className="dash-card ces-card" aria-labelledby="ces-heading">
       <div className="card-title">
         <div>
-          <p className="dash-kicker">SAFETY &amp; RESPONSE</p>
-          <h2 id="ces-heading">Emergency &amp; Safety Settings</h2>
+          <p className="dash-kicker">{t('safety.safetyResponse') || 'SAFETY & RESPONSE'}</p>
+          <h2 id="ces-heading">{t('safety.emergencySettings') || 'Emergency & Safety Settings'}</h2>
         </div>
         <span className="icon-bubble coral" aria-hidden="true">
           <ShieldAlert size={20} />
@@ -133,8 +135,7 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
       </div>
 
       <p className="ces-intro">
-        These settings are used by the patient's <strong>Take Me Home</strong> compass and <strong>🆘 SOS</strong> emergency screen.
-        All data is stored securely in local offline storage.
+        {t('safety.emergencySettingsDesc') || "These settings are used by the patient's Take Me Home compass and SOS emergency screen. All data is stored securely in local offline storage."}
       </p>
 
       <div className="ces-grid">
@@ -143,8 +144,8 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
           <div className="ces-box-header">
             <span className="ces-icon-bubble teal" aria-hidden="true"><Phone size={18} /></span>
             <div className="ces-box-title">
-              <h3>Primary Caregiver</h3>
-              <p>Direct contact for patient SOS calls</p>
+              <h3>{t('safety.primaryCaregiver') || 'Primary Caregiver'}</h3>
+              <p>{t('safety.directContactPatient') || 'Direct contact for patient SOS calls'}</p>
             </div>
           </div>
 
@@ -155,36 +156,36 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
               </p>
               <p className="ces-contact-phone">📞 {contact.phone}</p>
               {contact.secondaryPhone && (
-                <p className="ces-contact-sec-phone">Family phone: {contact.secondaryPhone}</p>
+                <p className="ces-contact-sec-phone">{t('safety.familyPhone') || 'Family phone'}: {contact.secondaryPhone}</p>
               )}
               <div className="ces-btn-row">
                 <button
                   type="button"
                   className="ces-action-btn edit"
                   onClick={openContactModal}
-                  aria-label="Edit caregiver emergency contact"
+                  aria-label={t('safety.editContact') || "Edit caregiver emergency contact"}
                 >
-                  <Edit3 size={15} aria-hidden="true" /> Edit Contact
+                  <Edit3 size={15} aria-hidden="true" /> {t('safety.editContact') || 'Edit Contact'}
                 </button>
                 <button
                   type="button"
                   className="ces-action-btn delete"
                   onClick={handleDeleteContact}
-                  aria-label="Delete caregiver emergency contact"
+                  aria-label={t('safety.remove') || "Delete caregiver emergency contact"}
                 >
-                  <Trash2 size={15} aria-hidden="true" /> Remove
+                  <Trash2 size={15} aria-hidden="true" /> {t('safety.remove') || 'Remove'}
                 </button>
               </div>
             </div>
           ) : (
             <div className="ces-empty-state">
-              <p>No caregiver phone number configured.</p>
+              <p>{t('safety.noCaregiverPhone') || 'No caregiver phone number configured.'}</p>
               <button
                 type="button"
                 className="btn btn-primary ces-add-btn"
                 onClick={openContactModal}
               >
-                <Plus size={16} aria-hidden="true" /> Add Emergency Contact
+                <Plus size={16} aria-hidden="true" /> {t('safety.addEmergencyContact') || 'Add Emergency Contact'}
               </button>
             </div>
           )}
@@ -195,8 +196,8 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
           <div className="ces-box-header">
             <span className="ces-icon-bubble blue" aria-hidden="true"><Home size={18} /></span>
             <div className="ces-box-title">
-              <h3>Home Location</h3>
-              <p>Target location for Take Me Home guidance</p>
+              <h3>{t('safety.homeLocation') || 'Home Location'}</h3>
+              <p>{t('safety.targetTakeMeHome') || 'Target location for Take Me Home guidance'}</p>
             </div>
           </div>
 
@@ -206,15 +207,15 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
               <strong>{homeLocation.address}</strong>
             </p>
             <p className="ces-loc-coords">
-              Coordinates: {homeLocation.latitude}, {homeLocation.longitude}
+              {t('safety.coordinates') || 'Coordinates'}: {homeLocation.latitude}, {homeLocation.longitude}
             </p>
             <button
               type="button"
               className="ces-action-btn edit"
               onClick={openHomeModal}
-              aria-label="Set or change saved home location"
+              aria-label={t('safety.changeHomeLocation') || "Set or change saved home location"}
             >
-              <Edit3 size={15} aria-hidden="true" /> Change Home Location
+              <Edit3 size={15} aria-hidden="true" /> {t('safety.changeHomeLocation') || 'Change Home Location'}
             </button>
           </div>
         </div>
@@ -224,8 +225,8 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
           <div className="ces-box-header">
             <span className="ces-icon-bubble coral" aria-hidden="true"><ShieldAlert size={18} /></span>
             <div className="ces-box-title">
-              <h3>Emergency Services Helpline</h3>
-              <p>National emergency response number</p>
+              <h3>{t('safety.emergencyHelpline') || 'Emergency Services Helpline'}</h3>
+              <p>{t('safety.nationalResponseNumber') || 'National emergency response number'}</p>
             </div>
           </div>
 
@@ -238,9 +239,9 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
               type="button"
               className="ces-action-btn edit"
               onClick={openConfigModal}
-              aria-label="Configure emergency number"
+              aria-label={t('safety.configureNumber') || "Configure emergency number"}
             >
-              <Edit3 size={15} aria-hidden="true" /> Configure Number
+              <Edit3 size={15} aria-hidden="true" /> {t('safety.configureNumber') || 'Configure Number'}
             </button>
           </div>
         </div>
@@ -253,7 +254,7 @@ export default function CaregiverEmergencySection({ onPreviewTakeMeHome }) {
             className="ces-preview-btn"
             onClick={onPreviewTakeMeHome}
           >
-            🧭 Open Take Me Home &amp; SOS View
+            🧭 {t('patient.takeMeHomeSOS') || 'Open Take Me Home & SOS View'}
           </button>
         </div>
       )}
